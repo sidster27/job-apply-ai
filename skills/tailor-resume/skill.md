@@ -15,6 +15,17 @@ Tailoring means **choosing, ordering and wording true facts for this job**. It n
 
 If a fact is not in those places, it does not go on the resume.
 
+## Framing: make the strongest honest case
+
+The goal is the best possible *true* version of the applicant. Do:
+- Lead with the most impressive true work for this role and give it room.
+- Use strong, specific verbs and say what the work was *for* and who used it (IC, clients, a team decision).
+- Spell out real scope: how many funds / products / companies, which asset classes, which tools.
+- Use numbers the applicant gives you. If they give an approximation, write it as an approximation ("~"), in their words.
+- Connect coursework, projects and competitions to the job when they are real.
+
+Do **not** stretch beyond what happened. If a stronger claim would need a bigger number, a bigger title, a bigger scope, a tool the applicant has not used, or a credential not held, **do not write it**. Ask the applicant for the real detail instead - there is usually a stronger true version than the first draft. Finance employers verify employment, titles and credentials, so an overstated line can cost an offer later.
+
 ## Hard rules
 
 - **No invented numbers, metrics, deal sizes, AUM figures, tools, titles, dates, certifications or coursework.**
@@ -27,13 +38,13 @@ If a fact is not in those places, it does not go on the resume.
 ## Steps
 
 1. **Read the job description.** Identify the real work, the sector, what is emphasised (listed first / repeated), seniority, class-year, required tools and credentials.
-2. **Pick a variant** (an ordering and emphasis choice, not new content):
-   - Equity Research / Buy-side research
-   - Asset Management / Alternatives (fund evaluation, PE / VC / hedge, attribution, IC materials)
-   - Infrastructure, Energy and Project Finance
-   - Corporate Finance / FP&A / Treasury (incl. supply chain finance)
-   - Credit / Fixed Income
-   - Wealth Management / Investment Strategy
+2. **Use the job's variant** (`resumeVariant` from the filter output; definitions in `config/search-spec.json` -> `resumeVariants`). A variant is an emphasis and ordering choice, **not different content**: the applicant has only a few roles, so employers, titles and dates are identical in every variant. What changes is the summary angle, which work leads, skills order and keywords.
+   - `equity-research` - Equity Research / Buy-side research
+   - `asset-mgmt-alternatives` - Asset Management & Alternatives
+   - `energy-infrastructure` - Energy & Infrastructure Finance
+   - `corporate-finance` - Corporate Finance (incl. FP&A, treasury, supply chain finance, credit-type roles)
+   - `base` - fallback when nothing clearly fits
+   Each variant has its own `.docx` kept locally / in the Job Tracker project. Start from the matching variant file, then tailor to the specific posting.
 3. **Score coverage.** Compare JD keywords (`src/tailor/resume-tailor.ts` -> `computeMatchScore`) with the base resume. The score is a *coverage signal*, not a target to hit at any cost. Missing keywords split into:
    - *true but unstated* -> reword an existing bullet to include it
    - *not true / not held* -> list as a gap
@@ -57,4 +68,4 @@ Save to `data/resumes/{company-slug}-{jobId}/` as `FirstName_LastName_Resume.doc
 
 - `config/search-spec.json` - roles, sectors, keywords
 - `src/tailor/resume-tailor.ts` - keyword extraction and coverage scoring (finance vocabulary)
-- `templates/` - sample resume text for the code path; the real resume lives with the user
+- `templates/` - sample resume text for the code path; the real resume and the variant `.docx` files live with the user (git-ignored)

@@ -7,6 +7,10 @@ description: Deeper, researched version of resume tailoring for priority (Tier A
 
 Use for Tier A jobs. Everything in `tailor-resume` applies, including its **hard rules** (no invented numbers, tools, titles, credentials or padding; gaps are reported, not covered). This skill adds research and tighter editing.
 
+## 0. Variant and framing
+
+Start from the job's `resumeVariant` (see `tailor-resume` and `config/search-spec.json` -> `resumeVariants`). Framing policy is the same as `tailor-resume`: make the strongest honest case - lead with the best true work, strong specific verbs, real scope, the applicant's own numbers (approximations marked "~"). Never stretch past what happened; if a stronger claim needs a bigger number, title, scope, tool or credential, ask the applicant for the real detail instead of writing it.
+
 ## 1. Understand the job (before touching the resume)
 
 Read the full description and write down:

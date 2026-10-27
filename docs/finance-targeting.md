@@ -13,6 +13,7 @@ This fork is tuned for **finance analyst / research / internship** roles. Everyt
 | `exclude` | Too-senior words, non-finance domains, non-U.S. places, years-of-experience limits |
 | `locations` | U.S. scope, remote allowed, financial-hub cities (score bonus) |
 | `scoring` | Draft weights, tier cut-offs (A >= 70, B >= 50, C >= 30), minimum score |
+| `resumeVariants` | Four resume variants (equity research, asset management & alternatives, energy & infrastructure, corporate finance) and how each job is matched to one |
 | `applyPolicy` | Dry-run by default; questions that always go to the user |
 
 Change the file, run `npm test`, then `npm run pipeline` (or `node scripts/greenhouse-filter.cjs --with-suggested`). No code change needed to retarget.
@@ -30,9 +31,10 @@ pull (Greenhouse boards / LinkedIn / career pages)
 
 ## Principles
 
-1. **Truthful resumes.** Tailoring reorders and rewords real facts. It never invents metrics, tools, titles or credentials. Unmet requirements are listed as gaps.
-2. **You approve every submission.** No auto-submit. Legal, criminal, regulatory, waiver and health questions are never auto-answered (`ASK_USER`).
-3. **Personal data stays local.** `config/profile.json`, your real resume text (`templates/resume-base.txt`), `.docx` / `.pdf` files and everything under `data/` are git-ignored. This fork is public: never commit them.
+1. **Strongest honest resumes.** Tailoring leads with the best true work, in strong specific language, using the numbers you provide. It never inflates metrics, scope, titles, tools or credentials; unmet requirements are listed as gaps and Claude asks you for real detail instead.
+2. **Graduate student.** Undergraduate-only postings are excluded; master's / MBA programs get a score bonus.
+3. **You approve every submission.** No auto-submit. Legal, criminal, regulatory, waiver and health questions are never auto-answered (`ASK_USER`).
+4. **Personal data stays local.** `config/profile.json`, your real resume text (`templates/resume-base.txt`), `.docx` / `.pdf` files and everything under `data/` are git-ignored. This fork is public: never commit them.
 
 ## Setup on your machine
 

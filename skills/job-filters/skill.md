@@ -15,6 +15,7 @@ Single source of truth: `config/search-spec.json`. Read it first; never hardcode
 - **Sectors (priority):** buy-side research, asset management, alternatives, energy and infrastructure finance, equity research, wealth management, corporate finance, credit / fixed income, supply chain finance.
 - **Level:** internship, analyst, associate (entry), full-time analyst programs for the **Class of 2027**, rotational / development programs.
 - **Availability:** graduating May 2027; start after that.
+- **Degree level:** the applicant is a **graduate (master's) student**. Remove postings specifically for undergraduate / bachelor's students ("rising junior / senior", "currently pursuing a bachelor's", "undergraduate program") unless they also welcome graduate students. A plain "Bachelor's degree required" is fine. Postings for master's / MBA candidates are a plus.
 - **Location:** anywhere in the United States, major financial hubs preferred; in-person is fine; remote-US is fine.
 - **Authorization:** no sponsorship needed - do not drop roles for "no sponsorship" language. Roles that require U.S. citizenship are fine too.
 - **Salary:** do not filter on it.
@@ -42,6 +43,7 @@ For each kept job, read the **full** description (never truncated) and decide ke
 - outside the U.S. with no U.S. option
 - a staffing agency or aggregator repost rather than the employer
 - the wrong class year (e.g. Summer 2026 programs, or Class of 2028+)
+- undergraduate-only programs (read the whole description; the script only sees the first ~2,000 characters)
 - already applied (check `data/applications-log.json`, only `status: "submitted"` counts)
 
 **Flag, don't silently drop:**
@@ -64,7 +66,7 @@ Role term in title, entry-level wording, Class of 2027, sector match, hub city, 
   "gaps": ["Series 86/87 preferred - not held"],
   "reason": "Fundamental equity research program, 2027 start, Boston.",
   "resumeStrategy": {
-    "variant": "equity-research",
+    "variant": "equity-research",   // one of: equity-research | asset-mgmt-alternatives | energy-infrastructure | corporate-finance | base
     "leadWith": "most relevant true experience for this role",
     "emphasize": ["phrases from the JD that match real experience"],
     "angleFromJD": "One sentence: what is this team actually hiring for?"

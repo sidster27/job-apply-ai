@@ -1,5 +1,5 @@
 {
-  "_description": "LinkedIn search queries for src/search/job-searcher.ts. Generated from config/search-spec.json titles.strong (core roles) x {internship, entry level}. Edit freely; add 'suggested' titles from the spec when you approve them. All-US scope, on-site and remote both allowed.",
+  "_description": "LinkedIn search queries for src/search/job-searcher.ts. Core roles from config/search-spec.json titles.strong x {internship, entry level}, plus every titles.suggested role (entry level). All-U.S. scope; on-site and remote both allowed. Edit freely.",
   "queries": [
     {
       "keyword": "Financial Analyst",
@@ -281,6 +281,318 @@
     {
       "keyword": "Off-cycle finance internship",
       "location": "United States",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Manager Research Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Fund Due Diligence Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Manager Due Diligence Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Investment Due Diligence Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Investment Strategy Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Portfolio Construction Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Performance And Attribution Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Performance Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Private Markets Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Private Credit Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Real Assets Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Infrastructure Investment Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Capital Markets Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Leveraged Finance Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Structured Finance Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Securitization Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Treasury Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Working Capital Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Trade Finance Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Strategic Finance Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Corporate Development Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Valuation Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Financial Due Diligence Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Transaction Advisory Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Market Risk Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Credit Risk Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Portfolio Risk Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Macro Research Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Economic Research Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Country Risk Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "ESG Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Climate Risk Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Sustainable Investing Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Quantitative Research Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Investment Data Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Commodities Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Energy Trading Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Power And Utilities Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Energy Transition Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
       "dateSincePosted": "past week",
       "sortBy": "recent",
       "limit": "50"

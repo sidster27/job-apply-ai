@@ -6,7 +6,7 @@
  * Usage:
  *   node scripts/greenhouse-filter.cjs
  *   node scripts/greenhouse-filter.cjs --input data/jobs/greenhouse-jobs.json --output data/jobs/greenhouse-filtered.json
- *   node scripts/greenhouse-filter.cjs --with-suggested      # also use titles.suggested from the spec
+ *   node scripts/greenhouse-filter.cjs --with-suggested      # force suggested titles on (the spec has useSuggested: true)
  *   node scripts/greenhouse-filter.cjs --min-score 40 --show 50
  *   node scripts/greenhouse-filter.cjs --spec config/search-spec.json
  *
@@ -38,7 +38,7 @@ function termRegex(term) {
 
 /** Returns the list of terms (from `terms`) found in `text`. */
 function hits(text, terms) {
-  const t = String(text || '').toLowerCase();
+  const t = String(text || '').toLowerCase().replace(/[\u2018\u2019]/g, "'");
   return (terms || []).filter((term) => termRegex(term).test(t));
 }
 
@@ -73,6 +73,19 @@ function classYearSignal(text, classYear) {
   return null;
 }
 
+/** Pick the resume variant for a job: title terms weigh 3, sector hits weigh 1; no match -> 'base'. */
+function pickVariant(title, sectorsHit, spec) {
+  const variants = spec.resumeVariants || {};
+  let best = 'base';
+  let bestScore = 0;
+  for (const [id, v] of Object.entries(variants)) {
+    if (id.startsWith('_') || id === 'base') continue;
+    const s = 3 * hits(title, v.matchTitles).length + (sectorsHit || []).filter((k) => (v.matchSectors || []).includes(k)).length;
+    if (s > bestScore) { best = id; bestScore = s; }
+  }
+  return best;
+}
+
 /**
  * Returns { keep, reason?, score?, tier?, flags[], matched{} } for one job.
  * Pure function: everything it needs comes from `job` and `spec`.
@@ -101,6 +114,13 @@ function evaluate(job, spec, opts = {}) {
   // 3. Must look like an entry-level / analyst-type title
   const entryHit = hits(title, spec.titles.entryWords);
   if (!entryHit.length) return drop('not-analyst-level-title');
+
+  // 3b. Graduate student: drop postings specifically for undergraduate / bachelor's students,
+  //     unless they also welcome graduate students. A plain "Bachelor's required" is fine.
+  const degreeText = title + ' ' + desc;
+  const ugHit = hits(degreeText, spec.exclude.undergradOnly);
+  const gradHit = hits(degreeText, spec.exclude.graduateEligible);
+  if (ugHit.length && !gradHit.length) return drop('undergrad-only: ' + ugHit[0]);
 
   // 4. Role match: strong / suggested title term, else finance context
   const ctxTerms = spec.financeContext.terms;
@@ -163,6 +183,9 @@ function evaluate(job, spec, opts = {}) {
   score += Math.min(sc.sectorPointsCap, sectorsHit.length * sc.sectorPointsEach);
   matched.sectors = sectorsHit;
 
+  // 9b. Graduate-program bonus (explicitly open to master's / MBA students)
+  if (gradHit.length) { score += sc.graduateEligibleBonus || 0; matched.graduateEligible = gradHit[0]; }
+
   // 10. Freshness
   if (job.updatedAt) {
     const ageDays = (Date.now() - new Date(job.updatedAt).getTime()) / 86400000;
@@ -173,7 +196,8 @@ function evaluate(job, spec, opts = {}) {
   if (score < sc.minScoreToKeep) return drop('low-score: ' + score);
 
   const tier = score >= sc.tiers.A ? 'A' : score >= sc.tiers.B ? 'B' : 'C';
-  return { keep: true, score, tier, roleKind, flags, matched };
+  const variant = pickVariant(title, sectorsHit, spec);
+  return { keep: true, score, tier, roleKind, variant, flags, matched };
 }
 
 // ---------------------------------------------------------------------------
@@ -222,7 +246,7 @@ function main() {
     const dk = [job.company, job.title, job.location].join('|').toLowerCase();
     if (seen.has(dk)) { dupes++; continue; }
     seen.add(dk);
-    kept.push({ ...job, score: r.score, tier: r.tier, roleKind: r.roleKind, flags: r.flags, matched: r.matched });
+    kept.push({ ...job, score: r.score, tier: r.tier, roleKind: r.roleKind, resumeVariant: r.variant, flags: r.flags, matched: r.matched });
   }
 
   kept.sort((a, b) => b.score - a.score || new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0));
@@ -247,11 +271,11 @@ function main() {
   console.log('\nTop ' + Math.min(showN, kept.length) + ':');
   kept.slice(0, showN).forEach((j) => {
     const fl = j.flags.length ? '  [' + j.flags.join('; ') + ']' : '';
-    console.log('  [' + j.tier + ' ' + String(j.score).padStart(3) + '] ' + j.company + ' - ' + j.title + ' (' + j.location + ')' + fl);
+    console.log('  [' + j.tier + ' ' + String(j.score).padStart(3) + '] ' + j.company + ' - ' + j.title + ' (' + j.location + ')  <' + j.resumeVariant + '>' + fl);
   });
   console.log('\nSaved to ' + outPath);
 }
 
 if (require.main === module) main();
 
-module.exports = { evaluate, loadSpec, hits, maxYearsRequired, classYearSignal };
+module.exports = { evaluate, loadSpec, hits, maxYearsRequired, classYearSignal, pickVariant };

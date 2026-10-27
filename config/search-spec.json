@@ -1,6 +1,6 @@
 {
   "_description": "Single source of truth for WHAT jobs to look for. Read by scripts/greenhouse-filter.cjs and by the job-filters / search-jobs skills. Edit this file to change targeting; no code changes needed. Matching is case-insensitive; a trailing * means prefix match (financ* matches finance, financial, financing).",
-  "_status": "DRAFT v1 - built from the user's first spec. Items under 'suggested' are OFF until useSuggested is set to true.",
+  "_status": "v2 - suggested titles are ON (useSuggested: true); scoring weights are still a draft.",
   "version": 1,
   "candidate": {
     "classYear": 2027,
@@ -12,8 +12,9 @@
       "full-time analyst (class of 2027)",
       "rotational / development program"
     ],
-    "notes": "Internships: with a May 2027 graduation, summer-2027 internships are usually reserved for students who return to school, so they are flagged for an eligibility check instead of dropped. Full-time Class of 2027 analyst programs and off-cycle internships are the main targets.",
-    "dropWrongClassYear": true
+    "notes": "Internships: with a May 2027 graduation, summer-2027 internships are usually reserved for students who return to school, so they are flagged for an eligibility check instead of dropped. Full-time Class of 2027 analyst programs and off-cycle internships are the main targets. Postings that are specifically for undergraduate / bachelor's students are excluded unless they also welcome graduate students.",
+    "dropWrongClassYear": true,
+    "degreeLevel": "graduate student (master's)"
   },
   "titles": {
     "_description": "A job must have an entry-level word in the title (entryWords) AND either a strong/suggested role term in the title, or finance context (see financeContext). Terms in strongNeedsContext are ambiguous and also need finance context.",
@@ -102,7 +103,7 @@
       "power and utilities",
       "energy transition"
     ],
-    "useSuggested": false
+    "useSuggested": true
   },
   "financeContext": {
     "_description": "Used when the title has no strong/suggested role term: the title/department must contain a finance term, or at least descriptionHitsNeeded distinct finance terms must appear in the description.",
@@ -328,7 +329,53 @@
       "europe"
     ],
     "maxMinYearsRequired": 3,
-    "yearsHardDropAt": 4
+    "yearsHardDropAt": 4,
+    "undergradOnly": [
+      "undergraduate",
+      "undergrad",
+      "rising junior",
+      "rising senior",
+      "rising sophomore",
+      "sophomore",
+      "junior year",
+      "senior year",
+      "currently pursuing a bachelor's",
+      "pursuing a bachelor's",
+      "pursuing a bachelors",
+      "pursuing your bachelor's",
+      "enrolled in a bachelor's",
+      "enrolled in a bachelors",
+      "bachelor's degree candidate",
+      "bachelor's candidates",
+      "bachelors candidates",
+      "bachelor's students",
+      "bachelor's program",
+      "bs/ba candidate",
+      "ba/bs candidate"
+    ],
+    "graduateEligible": [
+      "master's",
+      "masters",
+      "master of",
+      "mba",
+      "m.s.",
+      "msf",
+      "mfin",
+      "graduate student",
+      "graduate students",
+      "graduate degree",
+      "advanced degree",
+      "post-graduate",
+      "postgraduate",
+      "undergraduate and graduate",
+      "undergraduate or graduate",
+      "graduate and undergraduate",
+      "graduate or undergraduate",
+      "undergraduate/graduate",
+      "all degree levels",
+      "all academic levels"
+    ],
+    "_undergradNote": "Drop when an undergraduate-only phrase appears and no graduate-eligible phrase does. A plain 'Bachelor's degree required' is fine (a master's holder meets it) and is NOT dropped."
   },
   "locations": {
     "scope": "United States",
@@ -382,7 +429,8 @@
       "A": 70,
       "B": 50,
       "C": 30
-    }
+    },
+    "graduateEligibleBonus": 5
   },
   "applyPolicy": {
     "_description": "Mirrors CLAUDE.md. Nothing is submitted without the user's explicit OK on each application.",
@@ -394,5 +442,167 @@
       "health or medical",
       "anything unusual or ambiguously worded"
     ]
+  },
+  "resumeVariants": {
+    "_description": "Each job is assigned ONE variant by the filter script (title terms weigh 3, sector hits weigh 1; no match -> 'base'). A variant changes EMPHASIS and ORDER (summary angle, which experience/projects lead, skills order, keywords), never the underlying facts - the applicant has few roles, so the roles/dates/employers stay identical across variants. The actual variant .docx files are kept locally / in the Job Tracker project (they are git-ignored).",
+    "base": {
+      "label": "Base resume",
+      "use": "Fallback when no variant clearly fits, or when unsure."
+    },
+    "equity-research": {
+      "label": "Equity Research / Buy-side research",
+      "matchTitles": [
+        "equity research",
+        "research analyst",
+        "investment research",
+        "buy-side",
+        "buy side",
+        "sell-side",
+        "sell side",
+        "macro research",
+        "economic research"
+      ],
+      "matchSectors": [
+        "equity-research",
+        "buy-side-research"
+      ],
+      "summaryAngle": "Fundamental research and valuation: forming and defending an investment view.",
+      "leadWith": "research outputs (reports, sector / company analysis, models, pitches), then competitions and equities coursework",
+      "skillsOrder": [
+        "Financial modeling (DCF, comps)",
+        "Excel",
+        "Bloomberg / FactSet / Capital IQ",
+        "Python / SQL"
+      ],
+      "keywords": [
+        "valuation",
+        "earnings model",
+        "sector analysis",
+        "initiating coverage",
+        "stock pitch"
+      ]
+    },
+    "asset-mgmt-alternatives": {
+      "label": "Asset Management & Alternatives",
+      "matchTitles": [
+        "asset management",
+        "private equity",
+        "venture capital",
+        "hedge fund",
+        "private markets",
+        "private credit",
+        "real assets",
+        "fund due diligence",
+        "manager due diligence",
+        "investment due diligence",
+        "manager research",
+        "portfolio analyst",
+        "portfolio construction",
+        "investment strategy",
+        "performance and attribution",
+        "performance analyst",
+        "wealth management",
+        "investment analyst"
+      ],
+      "matchSectors": [
+        "asset-management",
+        "alternatives",
+        "wealth-management"
+      ],
+      "summaryAngle": "Evaluating funds, managers and strategies; portfolio-level thinking and IC-ready communication.",
+      "leadWith": "fund / manager evaluation, portfolio reviews, attribution, IC materials, then alternatives coverage",
+      "skillsOrder": [
+        "Fund & manager due diligence",
+        "Performance attribution",
+        "Excel modeling",
+        "Morningstar / Preqin / PitchBook / Bloomberg",
+        "Python / SQL"
+      ],
+      "keywords": [
+        "due diligence",
+        "portfolio construction",
+        "attribution",
+        "manager selection",
+        "investment committee"
+      ]
+    },
+    "energy-infrastructure": {
+      "label": "Energy & Infrastructure Finance",
+      "matchTitles": [
+        "infrastructure finance",
+        "project finance",
+        "energy finance",
+        "infrastructure investment",
+        "energy transition",
+        "power and utilities",
+        "commodities",
+        "energy trading",
+        "digital infrastructure",
+        "data center"
+      ],
+      "matchSectors": [
+        "energy-infrastructure-finance"
+      ],
+      "summaryAngle": "Capital-intensive asset analysis: project cash flows, financing structures and the energy / infrastructure cycle.",
+      "leadWith": "modeling and long-horizon cash-flow analysis, real-assets / infrastructure exposure, macro and geopolitical energy research, relevant coursework and projects",
+      "skillsOrder": [
+        "Project / financial modeling",
+        "Excel",
+        "Valuation & scenario analysis",
+        "Capital IQ / Bloomberg",
+        "Python / SQL"
+      ],
+      "keywords": [
+        "project finance",
+        "infrastructure",
+        "energy transition",
+        "renewables",
+        "cash flow modeling",
+        "data center"
+      ]
+    },
+    "corporate-finance": {
+      "label": "Corporate Finance",
+      "matchTitles": [
+        "corporate finance",
+        "financial analyst",
+        "finance analyst",
+        "fp&a",
+        "strategic finance",
+        "corporate development",
+        "treasury",
+        "working capital",
+        "trade finance",
+        "supply chain finance",
+        "valuation",
+        "credit analyst",
+        "fixed income",
+        "capital markets",
+        "financial due diligence",
+        "transaction advisory"
+      ],
+      "matchSectors": [
+        "corporate-finance",
+        "supply-chain-finance",
+        "credit-fixed-income"
+      ],
+      "summaryAngle": "Financial analysis that supports business decisions: forecasting, budgeting, valuation, capital allocation.",
+      "leadWith": "financial analysis, modeling and forecasting work, quantitative / accounting foundation, then relevant coursework and projects",
+      "skillsOrder": [
+        "Financial modeling & forecasting",
+        "Excel / advanced formulas",
+        "Accounting & financial statement analysis",
+        "Power BI / Tableau",
+        "Python / SQL"
+      ],
+      "keywords": [
+        "fp&a",
+        "forecasting",
+        "variance analysis",
+        "budgeting",
+        "capital allocation",
+        "working capital"
+      ]
+    }
   }
 }
