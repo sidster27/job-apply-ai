@@ -32,6 +32,12 @@ config/profile.json
 config/greenhouse-profile.json
 config/workday-profile.json
 
+# Your real resume / cover letter text (copy the *.example.txt files to these names locally)
+templates/resume-base.txt
+templates/cover-letter-base.txt
+templates/*.local.*
+config/*.local.json
+
 # Resume and cover letter documents (binary files)
 *.pdf
 *.docx

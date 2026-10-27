@@ -1,10 +1,289 @@
 {
+  "_description": "LinkedIn search queries for src/search/job-searcher.ts. Generated from config/search-spec.json titles.strong (core roles) x {internship, entry level}. Edit freely; add 'suggested' titles from the spec when you approve them. All-US scope, on-site and remote both allowed.",
   "queries": [
-    { "keyword": "Senior Staff Software Engineer Java", "location": "United States", "experienceLevel": "senior", "remoteFilter": "remote", "salary": "120000" },
-    { "keyword": "Staff Engineer Java Spring Boot", "location": "United States", "experienceLevel": "senior", "remoteFilter": "remote", "salary": "120000" },
-    { "keyword": "Senior Software Engineer fintech payments", "location": "United States", "experienceLevel": "senior", "remoteFilter": "remote" },
-    { "keyword": "Senior Backend Engineer Java Kafka", "location": "United States", "experienceLevel": "senior", "remoteFilter": "remote" },
-    { "keyword": "Principal Software Engineer Java AWS", "location": "United States", "experienceLevel": "senior", "salary": "120000" },
-    { "keyword": "Senior Software Engineer payments platform", "location": "United States", "remoteFilter": "remote", "salary": "120000" }
+    {
+      "keyword": "Financial Analyst",
+      "location": "United States",
+      "experienceLevel": "internship",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Financial Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Equity Research Analyst",
+      "location": "United States",
+      "experienceLevel": "internship",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Equity Research Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Investment Analyst",
+      "location": "United States",
+      "experienceLevel": "internship",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Investment Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Research Analyst finance",
+      "location": "United States",
+      "experienceLevel": "internship",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Research Analyst finance",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Corporate Finance Analyst",
+      "location": "United States",
+      "experienceLevel": "internship",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Corporate Finance Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Credit Analyst",
+      "location": "United States",
+      "experienceLevel": "internship",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Credit Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Fixed Income Analyst",
+      "location": "United States",
+      "experienceLevel": "internship",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Fixed Income Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Asset Management Analyst",
+      "location": "United States",
+      "experienceLevel": "internship",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Asset Management Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Portfolio Analyst",
+      "location": "United States",
+      "experienceLevel": "internship",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Portfolio Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Private Equity Analyst",
+      "location": "United States",
+      "experienceLevel": "internship",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Private Equity Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Wealth Management Analyst",
+      "location": "United States",
+      "experienceLevel": "internship",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Wealth Management Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Infrastructure Finance Analyst",
+      "location": "United States",
+      "experienceLevel": "internship",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Infrastructure Finance Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Project Finance Analyst",
+      "location": "United States",
+      "experienceLevel": "internship",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Project Finance Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Supply Chain Finance Analyst",
+      "location": "United States",
+      "experienceLevel": "internship",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Supply Chain Finance Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Hedge Fund Analyst",
+      "location": "United States",
+      "experienceLevel": "internship",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Hedge Fund Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "FP&A Analyst",
+      "location": "United States",
+      "experienceLevel": "internship",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "FP&A Analyst",
+      "location": "United States",
+      "experienceLevel": "entry level",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "2027 Analyst Program finance",
+      "location": "United States",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Class of 2027 full-time analyst investments",
+      "location": "United States",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Rotational program finance 2027",
+      "location": "United States",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    },
+    {
+      "keyword": "Off-cycle finance internship",
+      "location": "United States",
+      "dateSincePosted": "past week",
+      "sortBy": "recent",
+      "limit": "50"
+    }
   ]
 }

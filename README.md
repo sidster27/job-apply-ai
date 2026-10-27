@@ -1,4 +1,9 @@
-# job-apply-ai
+# job-apply-ai (finance analyst fork)
+
+> **This fork targets finance analyst / research / internship roles** (equity research, buy-side, asset management, alternatives, corporate and infrastructure finance, credit / fixed income, wealth management). Targeting lives in `config/search-spec.json`; see [`docs/finance-targeting.md`](docs/finance-targeting.md). Resumes are tailored with **true facts only**, and **nothing is submitted without your explicit approval**. The text below is the original upstream README (software-engineering examples included).
+
+---
+
 
 AI-powered job application pipeline. Search jobs, tailor resumes, auto-fill ATS forms — all driven by Claude Code + Playwright MCP.
 

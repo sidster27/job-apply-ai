@@ -18,13 +18,13 @@ Generates job-specific, professional cover letters for the applicant.
 
 ## Tone & Style
 
-- **Casual and human** — like you're writing to a friend who works there, not a formal letter
-- **Confident but chill** — state facts, don't oversell. "I built X" not "I am deeply passionate about leveraging my extensive experience to..."
-- **Short** — 2-3 paragraphs max. Recruiters skim. Get to the point fast.
-- **Sound like a person** — use contractions, casual connectors ("honestly", "turns out", "basically"), first person
-- **No corporate fluff** — no "Dear Hiring Manager", no "I am writing to express my interest", no "I would be thrilled to"
-- **Never use**: "leverage", "synergy", "passionate about", "thrilled to", "eager to", "I believe I would be a great fit"
-- **Do use**: specific numbers, company names, honest self-assessment, casual tone
+- **Professional and direct** — finance recruiters expect a polished, concise tone; warm but not chatty
+- **Confident, factual** — state what was done and what it showed. No overselling
+- **Short** — 3 short paragraphs, under one page
+- **First person, plain words** — no buzzword strings
+- **True facts only** — every claim and number must come from the applicant's resume or profile; never invent metrics or experience
+- **Never use**: "leverage", "synergy", "passionate about", "thrilled to", "I believe I would be a great fit"
+- **Do use**: the specific team / strategy / sector, one or two concrete proof points, why this firm
 
 ## Links to Include (from config/profile.json)
 
@@ -41,29 +41,27 @@ Detect job type from JD and use matching opener:
 
 | JD Type | Detection | Opening |
 |---------|-----------|---------|
-| Payments/Fintech | payment, billing, transaction, fintech, credit | Lead with transaction processing experience and relevant fintech employers |
-| E-commerce | commerce, ecommerce, marketplace, storefront | Lead with marketplace/platform backend experience |
-| Healthcare | health, medical, clinical, patient | Bridge from engineering principles: regulatory compliance, data integrity, high availability |
-| Distributed Systems | distributed, kafka, event-driven, streaming | Lead with event-driven architecture experience and event volumes |
-| Platform/Infra | platform, infrastructure, framework, developer experience | Lead with shared libraries/services adopted by many teams |
-| AI/ML | ai, ml, llm, agentic, machine learning | Lead with AI-augmented development practices |
-| High Scale | scale, high-throughput, high-volume | Lead with scaling metrics from past work |
-| Generic | (default) | Lead with years of experience and most impressive employers |
+| Equity / buy-side research | equity research, buy-side, fundamental, coverage | Lead with research work, coverage, models and pitches the applicant has actually done |
+| Asset mgmt / alternatives | asset management, private equity, venture, hedge fund, fund | Lead with fund / manager evaluation, attribution, IC materials |
+| Infrastructure / energy finance | project finance, infrastructure, energy, utilities, data center | Lead with the closest true modelling or sector work; be honest about what is being built |
+| Corporate finance / FP&A | corporate finance, FP&A, treasury, supply chain finance | Lead with modelling, forecasting, working-capital or analysis work |
+| Credit / fixed income | credit, fixed income, bonds | Lead with credit / risk analysis the applicant has done |
+| Wealth management | wealth, private bank, advisor | Lead with portfolio review, product research, client-facing work |
+| Generic | (default) | Lead with the strongest relevant experience and the applicant's degree program |
 
-### 2. Tech Stack Match (If JD Mentions Technologies)
+### 2. Tools / Method Match (If JD Mentions Them)
 
-Format: "Your stack mentions [their techs] — [connection to my experience]"
+Format: "The role uses [Bloomberg / FactSet / DCF and comps modelling ...] — [where I have used it]"
 
-Match their specific technologies to the applicant's real experience from `config/profile.json`.
+Only mention tools and methods the applicant has really used (from `config/profile.json` / the resume). If a key requirement is not met, do not claim it.
 
 ### 3. Proof Points (Pick 2-4 Based on Job Type)
 
 Draw from the applicant's most impressive achievements:
-- **Scale metrics**: Systems serving millions of users, processing high transaction volumes
-- **Platform impact**: Shared libraries/services adopted across many teams
-- **Awards/Recognition**: Any CEO/leadership awards, patents, major recognitions
-- **Reliability**: Significant incident reduction through monitoring/alerting improvements
-- **AI/Innovation**: Modern tooling, AI-augmented development, cutting-edge integrations
+- **Research / analysis work**: models, reports, IC materials, fund evaluations and what they led to
+- **Scale of responsibility**: assets, funds or products covered (use only figures the applicant has confirmed)
+- **Education and competitions**: relevant coursework, pitch competitions, certifications in progress (state status exactly)
+- **AI + finance**: only if the applicant has actually built or used it
 
 ### 4. Closer (Keep It Short)
 
@@ -115,7 +113,7 @@ Sign off with preferred name, not full formal name — casual.
 
 - **Every cover letter must reference the specific role and company by name**
 - **Tech stack match paragraph only if JD mentions specific technologies**
-- **Key credential links always included** (patents, major awards)
+- **Links**: include LinkedIn and any portfolio / pitch links the applicant has
 - **Never say "you should hire me"** — let the achievements speak
 - **Never mention salary, visa status, or relocation** in cover letter
 - **Generate both .txt and .docx** for every cover letter

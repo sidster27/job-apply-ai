@@ -40,15 +40,15 @@ If `next-job.cjs` returns nothing → no jobs available, stop.
 
 ## Parallel Application Flow (10 agents)
 
-### CRITICAL: Submit As You Go
-**Do NOT wait for all 10 agents to finish filling before submitting.** As each agent completes form filling:
-1. Immediately click Submit on that form
-2. Check email for its security code
-3. Enter the code and confirm submission
-4. Update progress.json
-5. Claim the next job for that agent
+### CRITICAL: Human review before every submit
+**Never click Submit without the user's explicit OK for that specific application.** For each filled form:
+1. Take a screenshot of the completed form and list any answer you were unsure about
+2. Stop and show the user; wait for approval (or corrections)
+3. Only after approval: click Submit
+4. If the site emails a security code, ask the user for it (or for permission to read it from the verification inbox) and enter it promptly - codes expire in ~10 minutes
+5. Screenshot the confirmation, update progress.json, then move to the next job
 
-This maximizes throughput and avoids security code expiry (codes expire in ~10 minutes).
+Work in small batches (a few at a time) so the user can review while forms are still fresh. Do not create accounts, set passwords or accept legal terms on the user's behalf.
 
 ### Phase 1: Claim & Navigate (all 10 in parallel)
 For each agent `playwright-N`:

@@ -69,11 +69,11 @@ Use scripts to pull data, but the LLM decides:
 For each job, the LLM:
 1. Reads the full JD (from API response or by scraping the URL)
 2. Understands what the person would actually do day-to-day
-3. Decides: developer role? → keep. Non-developer? → remove
+3. Decides: finance analyst / research / internship role that fits `config/search-spec.json`? → keep. Otherwise → remove
 4. Checks: already applied? → skip (verify against `data/applications-log.json`)
-5. Checks: sponsorship possible? → read the actual JD text, don't assume
-6. Scores 0-100 based on how well it matches the applicant's background (read `config/profile.json`)
-7. Orders by score: Tier 1 → Tier 2 → Tier 3
+5. Checks: class year / start timing (graduating May 2027) and internship eligibility → keep and flag when unsure
+6. Scores 0-100 against the spec's rubric and the applicant's real background (read `config/profile.json`)
+7. Orders by score: Tier A → Tier B → Tier C
 
 **Output:** `data/jobs/filtered-ready.json` with scored, ordered jobs
 
@@ -81,13 +81,12 @@ For each job, the LLM:
 
 For each job, in priority order:
 
-**Always use `impress-resume` for every job, every tier.** No tailor-resume, no base resume. Every application gets a deeply researched, role-by-role rewritten resume.
+**Truthful tailoring only.** Every resume is built from the applicant's real resume (a copy; the original is never overwritten). No invented facts, numbers, tools or credentials; requirements the resume cannot support are reported as gaps.
 
 | Tier | Resume Depth |
 |------|-------------|
-| Tier 1-3 (top 300) | Deep research, web search company + tech, full 5-role rewrite |
-| Tier 4-7 (301-700) | Standard depth, use resumeStrategy notes, rewrite top 3 roles |
-| Tier 8-10 (701-1000) | Use resumeStrategy notes, rewrite top 2 roles |
+| Tier A (score 70+) | `impress-resume`: research the firm / team, reframe true experience, interview-prep notes |
+| Tier B-C (score 30-69) | `tailor-resume`: reorder and reword true content, summary + skills ordering |
 
 **Parallelize with subagents:**
 - Spawn 3-5 subagents, each generating resumes for a batch of jobs
@@ -109,7 +108,7 @@ For each job with a generated resume:
 5. **LLM fills each field** using applicant profile — reading each question carefully
 6. **STOP on any dangerous/unusual question** — show user, ask for answer
 7. Screenshot → **LLM visually verifies** every field before submitting
-8. Submit (or pause for user approval)
+8. **Pause for the user's explicit approval - never submit on your own**
 9. Screenshot post-submit → **LLM verifies** submission success
 10. Save answers to `data/resumes/{company-slug}-{jobId}/answers.json`
 11. Log to `data/applications-log.json`
@@ -175,18 +174,18 @@ User says: "apply to this job: [URL]"
 | Financial crimes | "Have you been sanctioned?", "Any SEC violations?", "Insider trading?" |
 | Waivers/rights | "Do you agree to mandatory arbitration?", "Waive right to class action?" |
 | Non-standard NDAs | "Will you sign our proprietary IP agreement?" |
-| Health/medical | Anything beyond standard ADA disability disclosure |
+| Health/medical | Anything health-related, including disability questions unless the user pre-set an answer |
 | Tricky wording | Double negatives, confusing phrasing, questions designed to trap |
 | Unknown questions | Anything not in the standard answer set that feels risky |
 
 **Safe to auto-answer (from config/profile.json and config/standard-answers.json):**
 - Name, email, phone, address, LinkedIn, website
 - Work authorization, sponsorship needed
-- Standard EEO demographics (gender, race, veteran, disability)
-- Salary expectation (from profile)
-- How heard, willing to relocate
-- Previously worked at company, non-compete
-- Self-assessment scales (always highest/best option unless profile says otherwise)
+- Salary expectation: leave blank / "negotiable" unless the user sets one
+- How heard, willing to relocate (from profile)
+- Previously worked at company
+- EEO / voluntary self-identification: only as set in `config/standard-answers.json` (default: decline to self-identify); otherwise ask
+- Self-assessment scales: answer honestly from the resume; if unsure, ask - never auto-pick the top option
 
 ## Key Files
 

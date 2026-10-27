@@ -1,5 +1,8 @@
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // ---------------------------------------------------------------------------
 // Types
@@ -28,85 +31,64 @@ export interface TailoringOutput {
 // Keyword dictionaries
 // ---------------------------------------------------------------------------
 
-const PROGRAMMING_LANGUAGES = [
-  'java', 'python', 'typescript', 'javascript', 'go', 'golang', 'rust',
-  'c++', 'c#', 'ruby', 'scala', 'kotlin', 'swift', 'php', 'r',
-  'sql', 'bash', 'shell', 'perl', 'dart', 'elixir', 'haskell',
-  'objective-c', 'lua', 'groovy', 'clojure',
-];
-
-const FRAMEWORKS = [
-  'spring boot', 'spring', 'react', 'angular', 'vue', 'django', 'flask',
-  'fastapi', 'express', 'nestjs', 'next.js', 'nextjs', 'nuxt', 'rails',
-  'ruby on rails', 'asp.net', '.net', 'node.js', 'nodejs', 'spring cloud',
-  'micronaut', 'quarkus', 'svelte', 'remix', 'gatsby', 'tailwind',
-  'bootstrap', 'material ui', 'redux', 'graphql', 'grpc',
-];
-
 const TOOLS = [
-  'kafka', 'redis', 'docker', 'kubernetes', 'k8s', 'terraform', 'ansible',
-  'jenkins', 'github actions', 'gitlab ci', 'circleci', 'datadog',
-  'splunk', 'grafana', 'prometheus', 'elasticsearch', 'kibana', 'logstash',
-  'rabbitmq', 'celery', 'airflow', 'spark', 'hadoop', 'flink',
-  'snowflake', 'databricks', 'dbt', 'tableau', 'power bi', 'jira',
-  'confluence', 'figma', 'postman', 'swagger', 'openapi', 'nginx',
-  'envoy', 'istio', 'consul', 'vault', 'git', 'maven', 'gradle',
-  'webpack', 'vite', 'npm', 'yarn', 'pnpm',
+  'excel', 'vba', 'power query', 'powerpoint', 'python', 'sql', 'r programming', 'matlab', 'sas', 'stata',
+  'tableau', 'power bi', 'alteryx', 'snowflake',
+  'bloomberg', 'bloomberg terminal', 'factset', 'capital iq', 's&p capital iq', 'capiq', 'pitchbook',
+  'refinitiv', 'eikon', 'morningstar', 'morningstar direct', 'preqin', 'ycharts', 'sec edgar', 'edgar',
 ];
 
-const CLOUD_SERVICES = [
-  'aws', 'amazon web services', 'ec2', 's3', 'lambda', 'dynamodb',
-  'rds', 'ecs', 'eks', 'fargate', 'cloudformation', 'cdk', 'sqs', 'sns',
-  'kinesis', 'step functions', 'api gateway', 'cloudwatch', 'iam',
-  'gcp', 'google cloud', 'bigquery', 'cloud run', 'gke', 'pub/sub',
-  'cloud functions', 'cloud storage',
-  'azure', 'azure devops', 'cosmos db', 'azure functions', 'aks',
-  'blob storage',
+const MODELING = [
+  'financial modeling', 'financial modelling', 'dcf', 'discounted cash flow', 'lbo', 'leveraged buyout',
+  'comparable company', 'comps', 'precedent transactions', 'three-statement', '3-statement',
+  'sensitivity analysis', 'scenario analysis', 'accretion/dilution', 'merger model', 'sum-of-the-parts',
+  'valuation', 'forecasting', 'budgeting', 'variance analysis', 'fp&a', 'financial planning',
+  'unit economics', 'project finance model', 'credit model', 'earnings model',
 ];
 
-const METHODOLOGIES = [
-  'agile', 'scrum', 'kanban', 'ci/cd', 'cicd', 'tdd', 'bdd',
-  'test-driven development', 'behavior-driven development',
-  'devops', 'sre', 'site reliability', 'microservices', 'event-driven',
-  'domain-driven design', 'ddd', 'cqrs', 'event sourcing',
-  'continuous integration', 'continuous deployment', 'continuous delivery',
-  'infrastructure as code', 'iac', 'gitops', 'trunk-based development',
-  'pair programming', 'code review', 'mob programming',
-  'lean', 'safe', 'xp', 'extreme programming',
+const MARKETS = [
+  'equity', 'equities', 'fixed income', 'credit', 'bonds', 'high yield', 'investment grade',
+  'leveraged finance', 'private equity', 'venture capital', 'hedge fund', 'private credit', 'real assets',
+  'real estate', 'infrastructure', 'derivatives', 'options', 'commodities', 'etf', 'mutual fund',
+  'pms', 'aif', 'alternatives', 'alternative investments', 'structured finance', 'securitization',
+  'macro', 'rates', 'fx', 'esg', 'long/short', 'buy-side', 'sell-side',
+];
+
+const METHODS = [
+  'due diligence', 'investment committee', 'ic memo', 'investment memo', 'portfolio review',
+  'performance attribution', 'attribution', 'manager selection', 'fund evaluation', 'manager research',
+  'risk management', 'portfolio construction', 'asset allocation', 'stock pitch', 'initiating coverage',
+  'industry analysis', 'competitive analysis', 'sector analysis', 'financial statement analysis',
+  'ratio analysis', 'cash flow analysis', 'working capital', 'treasury', 'capital allocation', 'm&a',
+  'covenant', 'underwriting', 'market research', 'fund shortlisting', 'aum',
+];
+
+const CREDENTIALS = [
+  'cfa', 'cfa level', 'frm', 'cpa', 'caia', 'cma', 'series 7', 'series 63', 'series 65', 'series 79',
+  'series 86', 'series 87', 'sie',
 ];
 
 const SOFT_SKILLS = [
-  'leadership', 'mentoring', 'cross-functional', 'collaboration',
-  'communication', 'problem-solving', 'critical thinking', 'teamwork',
-  'stakeholder management', 'project management', 'product thinking',
-  'customer-focused', 'data-driven', 'strategic thinking', 'ownership',
-  'initiative', 'adaptability', 'time management', 'prioritization',
-  'conflict resolution', 'empathy', 'emotional intelligence',
-  'presentation', 'public speaking', 'technical writing',
-  'influence', 'negotiation', 'decision-making',
+  'attention to detail', 'detail-oriented', 'analytical', 'quantitative', 'communication',
+  'written communication', 'presentation', 'teamwork', 'collaboration', 'cross-functional',
+  'stakeholder', 'time management', 'prioritization', 'initiative', 'ownership', 'problem-solving',
+  'critical thinking', 'client-facing', 'self-starter',
 ];
 
 const INDUSTRY_TERMS = [
-  'fintech', 'payments', 'compliance', 'underwriting', 'lending',
-  'insurance', 'healthcare', 'healthtech', 'edtech', 'e-commerce',
-  'ecommerce', 'saas', 'b2b', 'b2c', 'marketplace', 'logistics',
-  'supply chain', 'blockchain', 'crypto', 'defi', 'web3',
-  'machine learning', 'ml', 'artificial intelligence', 'ai',
-  'deep learning', 'nlp', 'natural language processing',
-  'computer vision', 'data science', 'data engineering',
-  'cybersecurity', 'security', 'identity', 'authentication',
-  'authorization', 'oauth', 'sso', 'gdpr', 'hipaa', 'sox', 'pci',
-  'real-time', 'low-latency', 'high-throughput', 'distributed systems',
-  'scalability', 'reliability', 'observability', 'monitoring',
+  'energy', 'renewable', 'power', 'utilities', 'midstream', 'oil and gas', 'infrastructure finance',
+  'project finance', 'data center', 'digital infrastructure', 'supply chain finance', 'trade finance',
+  'receivables', 'factoring', 'wealth management', 'asset management', 'banking', 'insurance',
+  'fintech', 'climate', 'geopolitics', 'corporate finance', 'equity research', 'investment research',
 ];
 
 // Combine all keyword lists with their categories for structured extraction
 const KEYWORD_CATEGORIES: Record<string, string[]> = {
-  languages: PROGRAMMING_LANGUAGES,
-  frameworks: FRAMEWORKS,
   tools: TOOLS,
-  cloud: CLOUD_SERVICES,
-  methodologies: METHODOLOGIES,
+  modeling: MODELING,
+  markets: MARKETS,
+  methods: METHODS,
+  credentials: CREDENTIALS,
   softSkills: SOFT_SKILLS,
   industry: INDUSTRY_TERMS,
 };
@@ -124,8 +106,8 @@ function normalize(text: string): string {
  * matching for short keywords to avoid false positives (e.g. "r" inside "react").
  */
 function keywordPresent(keyword: string, normalizedText: string): boolean {
-  if (keyword.length <= 2) {
-    // For very short keywords (e.g. "r", "go", "ai", "ml"), require word boundaries
+  if (keyword.length <= 3) {
+    // For very short keywords (e.g. "fx", "dcf", "cfa", "sie"), require word boundaries
     const pattern = new RegExp(`\\b${escapeRegex(keyword)}\\b`, 'i');
     return pattern.test(normalizedText);
   }
@@ -142,7 +124,7 @@ function escapeRegex(str: string): string {
 
 /**
  * Extract keywords from a job description, categorized as required, preferred,
- * and technologies.
+ * and technologies (here: tools, models and credentials).
  *
  * "Required" keywords are those found near requirement-related language.
  * "Preferred" keywords are those found near nice-to-have language.
@@ -169,7 +151,7 @@ export function extractKeywords(jobDescription: string): {
   const preferredKeywords: string[] = [];
 
   // Scan every category for matches against the full JD
-  const techCategories = ['languages', 'frameworks', 'tools', 'cloud'];
+  const techCategories = ['tools', 'modeling', 'credentials'];
 
   for (const [category, words] of Object.entries(KEYWORD_CATEGORIES)) {
     for (const word of words) {
@@ -283,7 +265,7 @@ export function generateTailoringPrompt(input: TailoringInput): string {
   } catch {
     throw new Error(
       `Could not read base resume at ${input.baseResumePath}. ` +
-        'Make sure templates/resume-base.txt exists.'
+        'Copy templates/resume-base.example.txt to templates/resume-base.txt and fill in your real resume text (the file is git-ignored).'
     );
   }
 
@@ -314,7 +296,7 @@ ${baseResume}
 - **Keywords missing from resume:** ${missing.join(', ') || 'none'}
 - **Required keywords from JD:** ${keywords.required.join(', ') || 'none'}
 - **Preferred keywords from JD:** ${keywords.preferred.join(', ') || 'none'}
-- **Technologies mentioned in JD:** ${keywords.technologies.join(', ') || 'none'}
+- **Tools, models and credentials mentioned in JD:** ${keywords.technologies.join(', ') || 'none'}
 
 ---
 
@@ -322,17 +304,18 @@ ${baseResume}
 
 Create a tailored version of the resume that:
 
-1. **Reorders bullet points** to highlight the most relevant experience first for this specific role.
-2. **Adds missing keywords naturally** where they can be truthfully incorporated. Do NOT fabricate experience.
-3. **Adjusts the career summary / professional profile** to mirror the language and priorities of the job description.
-4. **Emphasizes quantified achievements** that are most relevant to this role.
-5. **Keeps the resume to a maximum of 2 pages** — be concise and impactful.
+1. **Reorders bullet points** so the experience most relevant to this role comes first.
+2. **Mirrors the job description's vocabulary** where it honestly describes work already on the base resume (e.g. say "equity research" instead of "stock analysis" only if that is what the work was).
+3. **Adjusts the summary** to the language and priorities of the job description.
+4. **Keeps every fact true.** Use ONLY facts, numbers, tools, titles and dates that appear in the base resume or that the applicant has told you. Do NOT invent metrics, add bullets about work that was not done, or add tools/skills/credentials the applicant does not have.
+5. **Lists gaps instead of covering them.** Put any job requirement the resume cannot honestly support in the MATCH ANALYSIS as a gap for the applicant to decide on - never onto the page.
+6. **Keeps the resume to 1 page** (2 only if the base resume already needs it).
 
 Then generate a **cover letter** specific to this role that:
 
 1. Opens with a compelling hook referencing the company or role specifically.
 2. Highlights 2-3 of the strongest matching qualifications with concrete examples.
-3. Addresses any potential gaps by reframing related experience.
+3. Addresses gaps honestly (what the applicant is actively building), without overstating experience.
 4. Closes with enthusiasm and a clear call to action.
 5. Is no longer than one page.
 

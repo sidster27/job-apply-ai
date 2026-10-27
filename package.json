@@ -1,19 +1,20 @@
 {
   "name": "job-apply-ai",
   "version": "0.1.0",
-  "description": "AI-powered job application pipeline — search, tailor resumes, auto-fill ATS forms",
+  "description": "AI-powered job application pipeline \u2014 search, tailor resumes, auto-fill ATS forms",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ShipItAndPray/job-apply-ai.git"
+    "url": "https://github.com/sidster27/job-apply-ai.git"
   },
-  "author": "ShipItAndPray",
+  "author": "sidster27 (fork of ShipItAndPray/job-apply-ai)",
   "license": "MIT",
   "scripts": {
     "build": "tsc",
     "pull": "node scripts/greenhouse-pull.cjs",
     "pull:today": "node scripts/greenhouse-pull.cjs --days 1",
     "filter": "node scripts/greenhouse-filter.cjs",
+    "test": "node tests/filter.test.cjs",
     "apply": "node scripts/greenhouse-apply.cjs --dry-run",
     "apply:submit": "node scripts/greenhouse-apply.cjs",
     "pipeline": "node scripts/greenhouse-pull.cjs && node scripts/greenhouse-filter.cjs && echo 'Ready to apply. Run: npm run apply'"

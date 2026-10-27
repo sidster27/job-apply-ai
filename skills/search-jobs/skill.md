@@ -53,7 +53,7 @@ The `?content=true` returns the full job description HTML. No auth needed.
 ```json
 {
   "id": "greenhouse job ID",
-  "title": "Senior Backend Engineer",
+  "title": "Equity Research Analyst",
   "company": "Stripe",
   "company_slug": "stripe",
   "location": "San Francisco, CA",
@@ -99,7 +99,7 @@ Returns JSON array of all open positions with title, description, location, team
 ```json
 {
   "id": "lever posting ID",
-  "title": "Senior Software Engineer",
+  "title": "Senior Financial Analyst",
   "company": "Plaid",
   "company_slug": "plaid",
   "location": "San Francisco, CA",
@@ -121,7 +121,7 @@ Returns JSON array of all open positions with title, description, location, team
 ### Growing the Lever slug list
 Lever has far fewer known slugs than Greenhouse. To grow it:
 - Every LinkedIn search result with a `jobs.lever.co` URL → extract slug → add to registry
-- Search: `site:jobs.lever.co software engineer` to discover Lever companies
+- Search: `site:jobs.lever.co financial analyst` to discover Lever companies
 - When user mentions a company, try `https://api.lever.co/v0/postings/{slug}` — if it returns data, add to registry
 - Check competitor lists, "companies using Lever" directories
 
@@ -174,7 +174,7 @@ When user says "linkedin external jobs", "find linkedin external", "linkedin non
 ```javascript
 const { query } = require('linkedin-jobs-api');
 const results = await query({
-  keyword: 'Senior Backend Engineer',
+  keyword: 'Equity Research Analyst',
   location: 'United States',
   dateSincePosted: 'past week',
   limit: '25'
@@ -232,7 +232,7 @@ Once you have the external ATS URL, fetch the full JD:
   "ats": "greenhouse",
   "atsSlug": "acme",
   "atsJobId": "6253501",
-  "title": "Lead Backend Engineer",
+  "title": "Investment Analyst",
   "company": "Acme Corp",
   "location": "United States",
   "description": "Full JD text...",
@@ -290,14 +290,14 @@ The slug registry should keep growing. Actively hunt for new companies.
 ### Sources to mine for new slugs:
 
 **Web searches:**
-- `site:boards.greenhouse.io software engineer` → find Greenhouse companies
-- `site:job-boards.greenhouse.io software engineer` → alternate Greenhouse domain
-- `site:jobs.lever.co software engineer` → find Lever companies
+- `site:boards.greenhouse.io financial analyst` → find Greenhouse companies
+- `site:job-boards.greenhouse.io financial analyst` → alternate Greenhouse domain
+- `site:jobs.lever.co financial analyst` → find Lever companies
 
 **Curated lists:**
 - Search: `"companies using greenhouse" list 2026`
 - Search: `"companies using lever" list 2026`
-- Search: `"best tech companies hiring" 2026 software engineer`
+- Search: `"asset managers hiring analysts" 2027 analyst program`
 - Search: `"YC companies hiring" greenhouse`
 
 **From job boards:**
