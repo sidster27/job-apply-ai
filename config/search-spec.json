@@ -1,7 +1,7 @@
 {
   "_description": "Single source of truth for WHAT jobs to look for. Read by scripts/greenhouse-filter.cjs and by the job-filters / search-jobs skills. Edit this file to change targeting; no code changes needed. Matching is case-insensitive; a trailing * means prefix match (financ* matches finance, financial, financing).",
-  "_status": "v2 - suggested titles are ON (useSuggested: true); scoring weights are still a draft.",
-  "version": 1,
+  "_status": "v3 - six resume variants (built from the final resumes), protected phrases, MBA-only rule, AI-enablement titles. Scoring weights are still a draft.",
+  "version": 2,
   "candidate": {
     "classYear": 2027,
     "availableFrom": "2027-05",
@@ -101,9 +101,77 @@
       "commodities",
       "energy trading",
       "power and utilities",
-      "energy transition"
+      "energy transition",
+      "investment banking",
+      "m&a",
+      "mergers and acquisitions",
+      "debt advisory",
+      "restructuring",
+      "equity capital markets",
+      "debt capital markets",
+      "sales and trading",
+      "sales & trading",
+      "global markets",
+      "markets analyst",
+      "trading analyst",
+      "quantitative investing",
+      "quantitative analyst",
+      "macro strategy",
+      "rates strategy",
+      "growth equity",
+      "buyout",
+      "principal investing",
+      "principal investments",
+      "co-invest",
+      "secondaries",
+      "fund of funds",
+      "direct lending",
+      "structured credit",
+      "asset finance",
+      "tax equity",
+      "real estate investment",
+      "acquisitions analyst",
+      "multi-asset",
+      "asset allocation",
+      "fund analyst",
+      "manager selection",
+      "investment consulting",
+      "credit research",
+      "ratings analyst",
+      "credit ratings",
+      "alternative data",
+      "research technology",
+      "ai enablement",
+      "ai strategy",
+      "ai transformation",
+      "ai analyst",
+      "ai associate",
+      "ai adoption",
+      "generative ai",
+      "genai",
+      "intelligent automation",
+      "digital transformation",
+      "investment technology",
+      "automation"
     ],
-    "useSuggested": true
+    "useSuggested": true,
+    "suggestedNeedsContext": [
+      "ai enablement",
+      "ai strategy",
+      "ai transformation",
+      "ai analyst",
+      "ai associate",
+      "ai adoption",
+      "generative ai",
+      "genai",
+      "intelligent automation",
+      "digital transformation",
+      "investment technology",
+      "research technology",
+      "alternative data",
+      "automation"
+    ],
+    "_aiNote": "AI-enablement / automation titles (suggestedNeedsContext) are only kept when the posting also shows finance context, so a generic SaaS 'AI Analyst' is dropped. Engineering titles stay excluded (exclude.domainInTitle)."
   },
   "financeContext": {
     "_description": "Used when the title has no strong/suggested role term: the title/department must contain a finance term, or at least descriptionHitsNeeded distinct finance terms must appear in the description.",
@@ -215,6 +283,51 @@
       "structured finance",
       "securitization",
       "bonds"
+    ],
+    "investment-banking": [
+      "investment banking",
+      "m&a",
+      "mergers and acquisitions",
+      "leveraged finance",
+      "restructuring",
+      "debt advisory",
+      "equity capital markets",
+      "debt capital markets",
+      "capital markets",
+      "corporate banking",
+      "financial sponsors"
+    ],
+    "trading-markets": [
+      "sales and trading",
+      "sales & trading",
+      "global markets",
+      "market making",
+      "systematic",
+      "quantitative research",
+      "quantitative investing",
+      "macro",
+      "rates",
+      "commodities trading"
+    ],
+    "private-equity-venture": [
+      "private equity",
+      "venture capital",
+      "growth equity",
+      "buyout",
+      "principal investing",
+      "portfolio company",
+      "portfolio companies"
+    ],
+    "portfolio-analytics": [
+      "portfolio analytics",
+      "portfolio construction",
+      "performance attribution",
+      "performance and attribution",
+      "risk-adjusted",
+      "multi-asset",
+      "asset allocation",
+      "manager selection",
+      "fund analytics"
     ]
   },
   "exclude": {
@@ -375,7 +488,40 @@
       "all degree levels",
       "all academic levels"
     ],
-    "_undergradNote": "Drop when an undergraduate-only phrase appears and no graduate-eligible phrase does. A plain 'Bachelor's degree required' is fine (a master's holder meets it) and is NOT dropped."
+    "_undergradNote": "Drop when an undergraduate-only phrase appears and no graduate-eligible phrase does. A plain 'Bachelor's degree required' is fine (a master's holder meets it) and is NOT dropped.",
+    "protectedPhrases": [
+      "sales and trading",
+      "sales & trading",
+      "sales/trading",
+      "sales & markets",
+      "tax equity",
+      "principal investing",
+      "principal investments",
+      "principal investment",
+      "manager research",
+      "manager selection",
+      "manager due diligence",
+      "fund manager",
+      "investment banking associate",
+      "private wealth associate"
+    ],
+    "_protectedNote": "These phrases are blanked out of the title before the senior-level and non-finance-domain checks, so 'Sales & Trading Summer Analyst' is not dropped for 'sales' and 'Principal Investing Analyst' is not dropped for 'principal'.",
+    "mbaOnly": [
+      "mba candidate",
+      "mba candidates",
+      "mba student",
+      "mba students",
+      "first-year mba",
+      "second-year mba",
+      "first year mba",
+      "second year mba",
+      "mba required",
+      "mba program",
+      "mba internship",
+      "mba summer associate",
+      "mba intern"
+    ],
+    "_mbaNote": "MBA-only postings are dropped unless the posting also welcomes master's / graduate students (graduateEligible terms other than the bare word 'mba')."
   },
   "locations": {
     "scope": "United States",
@@ -444,164 +590,289 @@
     ]
   },
   "resumeVariants": {
-    "_description": "Each job is assigned ONE variant by the filter script (title terms weigh 3, sector hits weigh 1; no match -> 'base'). A variant changes EMPHASIS and ORDER (summary angle, which experience/projects lead, skills order, keywords), never the underlying facts - the applicant has few roles, so the roles/dates/employers stay identical across variants. The actual variant .docx files are kept locally / in the Job Tracker project (they are git-ignored).",
+    "_description": "Each job is assigned ONE variant by scripts/greenhouse-filter.cjs (title terms weigh 3, sector hits weigh 1; the variant listed first wins a tie; no match -> 'base'). The six variants are the six final one-page resumes. A variant changes EMPHASIS, ORDER and WHICH TRUE BULLETS are used - never the underlying facts. The bullet bank (data/resume-bank/bank.json, git-ignored) holds every true bullet; `node scripts/resume-bank.cjs render <variant>` rebuilds a variant. The finished .docx files live in the local resumes/ folder (git-ignored). For a title no variant covers ('base'), the tailor-resume skill researches the title and posting first, picks the nearest variant, then adjusts.",
     "base": {
-      "label": "Base resume",
-      "use": "Fallback when no variant clearly fits, or when unsure."
+      "label": "No clear match - research the title first",
+      "use": "Unseen or generic title. tailor-resume Step 2 researches the role and picks the closest variant; user confirms; the choice is saved with scripts/learn-title.cjs."
+    },
+    "ib-pe": {
+      "label": "Investment Banking / Private Equity / Corporate Development",
+      "file": "resumes/IB-PE.docx",
+      "matchTitles": [
+        "investment banking",
+        "investment bank",
+        "m&a",
+        "mergers",
+        "leveraged finance",
+        "restructuring",
+        "debt advisory",
+        "equity capital markets",
+        "debt capital markets",
+        "capital markets",
+        "corporate banking",
+        "financial sponsors",
+        "private equity",
+        "venture capital",
+        "growth equity",
+        "buyout",
+        "principal investing",
+        "principal investments",
+        "deal team",
+        "corporate development",
+        "strategic finance",
+        "valuation",
+        "transaction advisory",
+        "financial due diligence"
+      ],
+      "matchSectors": [
+        "investment-banking",
+        "private-equity-venture"
+      ],
+      "summaryAngle": "Deal work: valuation, diligence, investment memos and Excel models for an investment committee.",
+      "leadWith": "PE/VC manager diligence, pre-IPO valuation work, real-asset and structured-credit assessments, Excel valuation models, Simon School Venture Fund diligence",
+      "skillsOrder": [
+        "DCF Valuation",
+        "Comparable-Company Analysis",
+        "Financial Modeling",
+        "Due Diligence",
+        "Investment Memos",
+        "Advanced Excel"
+      ],
+      "keywords": [
+        "valuation",
+        "due diligence",
+        "investment memo",
+        "comps",
+        "DCF",
+        "bull/base case"
+      ]
     },
     "equity-research": {
-      "label": "Equity Research / Buy-side research",
+      "label": "Equity Research / Buy-side & Macro Research",
+      "file": "resumes/Equity-Research.docx",
       "matchTitles": [
         "equity research",
         "research analyst",
+        "research associate",
+        "sector analyst",
+        "equity analyst",
+        "fundamental analyst",
+        "stock analyst",
         "investment research",
         "buy-side",
         "buy side",
         "sell-side",
         "sell side",
         "macro research",
-        "economic research"
+        "economic research",
+        "credit research"
       ],
       "matchSectors": [
         "equity-research",
         "buy-side-research"
       ],
       "summaryAngle": "Fundamental research and valuation: forming and defending an investment view.",
-      "leadWith": "research outputs (reports, sector / company analysis, models, pitches), then competitions and equities coursework",
+      "leadWith": "pre-IPO / unlisted equity valuation, the quant-strategy evaluation, market research on Bloomberg and Reuters, the 29-fund model",
       "skillsOrder": [
-        "Financial modeling (DCF, comps)",
-        "Excel",
-        "Bloomberg / FactSet / Capital IQ",
-        "Python / SQL"
+        "DCF & Comparable-Company Valuation",
+        "Scenario Analysis",
+        "Financial Modeling",
+        "Financial Statement Analysis",
+        "Advanced Excel",
+        "Bloomberg Terminal"
       ],
       "keywords": [
         "valuation",
         "earnings model",
         "sector analysis",
-        "initiating coverage",
-        "stock pitch"
+        "stock pitch",
+        "initiating coverage"
       ]
     },
-    "asset-mgmt-alternatives": {
-      "label": "Asset Management & Alternatives",
+    "trading-investments": {
+      "label": "Trading / Markets / Macro / Quant-adjacent Investments",
+      "file": "resumes/Trading-Investments.docx",
+      "matchTitles": [
+        "sales and trading",
+        "sales & trading",
+        "trading",
+        "trader",
+        "global markets",
+        "markets analyst",
+        "quantitative research",
+        "quantitative analyst",
+        "quantitative investing",
+        "quant research",
+        "macro",
+        "rates strategist",
+        "strategist",
+        "fixed income",
+        "systematic"
+      ],
+      "matchSectors": [
+        "trading-markets",
+        "credit-fixed-income"
+      ],
+      "summaryAngle": "Markets and risk: macro read-through, risk-adjusted metrics and automated monitoring.",
+      "leadWith": "the $30M gold reallocation, monthly macro research, the SMA risk sheet, AI-automated AUM tracking, market-data work at Finfactor",
+      "skillsOrder": [
+        "Risk-Adjusted Metrics (Sharpe, Sortino, Drawdown)",
+        "Macro & Rates Analysis",
+        "Scenario Analysis",
+        "Advanced Excel",
+        "Python (pandas)",
+        "Bloomberg Terminal"
+      ],
+      "keywords": [
+        "macro",
+        "rates",
+        "risk metrics",
+        "drawdown",
+        "market data",
+        "systematic"
+      ]
+    },
+    "asset-mgmt-portfolio-analytics": {
+      "label": "Asset Management / Portfolio Analytics / Investment Strategy / AI enablement",
+      "file": "resumes/Asset-Management-Portfolio-Analytics.docx",
       "matchTitles": [
         "asset management",
-        "private equity",
-        "venture capital",
-        "hedge fund",
-        "private markets",
-        "private credit",
-        "real assets",
-        "fund due diligence",
-        "manager due diligence",
-        "investment due diligence",
-        "manager research",
         "portfolio analyst",
+        "portfolio analytics",
+        "portfolio management",
         "portfolio construction",
-        "investment strategy",
         "performance and attribution",
         "performance analyst",
+        "investment strategy",
+        "investment strategist",
+        "investment analyst",
+        "investment associate",
+        "investments analyst",
+        "multi-asset",
+        "asset allocation",
+        "fund analyst",
         "wealth management",
-        "investment analyst"
+        "investment technology",
+        "investment data",
+        "ai enablement",
+        "ai strategy",
+        "ai transformation",
+        "ai analyst",
+        "intelligent automation"
       ],
       "matchSectors": [
         "asset-management",
-        "alternatives",
-        "wealth-management"
+        "wealth-management",
+        "portfolio-analytics"
       ],
-      "summaryAngle": "Evaluating funds, managers and strategies; portfolio-level thinking and IC-ready communication.",
-      "leadWith": "fund / manager evaluation, portfolio reviews, attribution, IC materials, then alternatives coverage",
+      "summaryAngle": "Portfolio analytics and fund selection, with AI-automated monitoring and screening.",
+      "leadWith": "AI-automated AUM tracking ($1.2B), AI approved-list screening, the 29-fund model, the SMA risk sheet, the $30M reallocation",
       "skillsOrder": [
-        "Fund & manager due diligence",
-        "Performance attribution",
-        "Excel modeling",
-        "Morningstar / Preqin / PitchBook / Bloomberg",
-        "Python / SQL"
+        "Performance Attribution",
+        "Risk-Adjusted Metrics",
+        "Manager Due Diligence",
+        "Portfolio Construction",
+        "Fund Overlap Analysis",
+        "LLM Agents & Workflow Automation"
       ],
       "keywords": [
-        "due diligence",
         "portfolio construction",
         "attribution",
         "manager selection",
-        "investment committee"
+        "automation",
+        "AI agent"
       ]
     },
-    "energy-infrastructure": {
-      "label": "Energy & Infrastructure Finance",
+    "project-finance-energy-infra": {
+      "label": "Project Finance / Energy & Infrastructure / Real Assets",
+      "file": "resumes/Project-Finance-Energy-Infrastructure.docx",
       "matchTitles": [
-        "infrastructure finance",
         "project finance",
-        "energy finance",
+        "infrastructure",
+        "infrastructure finance",
         "infrastructure investment",
+        "energy finance",
         "energy transition",
+        "power and renewables",
+        "renewables",
         "power and utilities",
-        "commodities",
-        "energy trading",
-        "digital infrastructure",
-        "data center"
+        "structured finance",
+        "asset finance",
+        "tax equity",
+        "real assets",
+        "real estate investment",
+        "real estate finance",
+        "acquisitions analyst",
+        "acquisitions associate",
+        "energy"
       ],
       "matchSectors": [
         "energy-infrastructure-finance"
       ],
-      "summaryAngle": "Capital-intensive asset analysis: project cash flows, financing structures and the energy / infrastructure cycle.",
-      "leadWith": "modeling and long-horizon cash-flow analysis, real-assets / infrastructure exposure, macro and geopolitical energy research, relevant coursework and projects",
+      "summaryAngle": "Real-asset and structured-credit evaluation: yield, leverage, waterfalls and downside scenarios.",
+      "leadWith": "the REIT/infrastructure trust and structured-credit fund assessment, manager diligence, pre-IPO valuation, scenario and stress testing (Bajaj Allianz)",
       "skillsOrder": [
-        "Project / financial modeling",
-        "Excel",
-        "Valuation & scenario analysis",
-        "Capital IQ / Bloomberg",
-        "Python / SQL"
+        "DCF & WACC Modeling",
+        "Scenario Analysis",
+        "Waterfall & Credit Analysis",
+        "Financial Modeling",
+        "Financial Statement Analysis",
+        "Advanced Excel"
       ],
       "keywords": [
         "project finance",
-        "infrastructure",
-        "energy transition",
-        "renewables",
-        "cash flow modeling",
-        "data center"
+        "waterfall",
+        "leverage",
+        "occupancy",
+        "lease term",
+        "WACC",
+        "scenario"
       ]
     },
-    "corporate-finance": {
-      "label": "Corporate Finance",
+    "alternatives-manager-dd": {
+      "label": "Alternatives / Manager Due Diligence / OCIO / Private Markets",
+      "file": "resumes/Alternatives-Manager-Due-Diligence.docx",
       "matchTitles": [
-        "corporate finance",
-        "financial analyst",
-        "finance analyst",
-        "fp&a",
-        "strategic finance",
-        "corporate development",
-        "treasury",
-        "working capital",
-        "trade finance",
-        "supply chain finance",
-        "valuation",
-        "credit analyst",
-        "fixed income",
-        "capital markets",
-        "financial due diligence",
-        "transaction advisory"
+        "manager due diligence",
+        "manager research",
+        "manager selection",
+        "fund due diligence",
+        "investment due diligence",
+        "due diligence analyst",
+        "private markets",
+        "private credit",
+        "direct lending",
+        "structured credit",
+        "alternatives",
+        "alternative investments",
+        "hedge fund",
+        "fund of funds",
+        "secondaries",
+        "co-invest",
+        "investment consulting",
+        "ocio",
+        "allocator"
       ],
       "matchSectors": [
-        "corporate-finance",
-        "supply-chain-finance",
-        "credit-fixed-income"
+        "alternatives"
       ],
-      "summaryAngle": "Financial analysis that supports business decisions: forecasting, budgeting, valuation, capital allocation.",
-      "leadWith": "financial analysis, modeling and forecasting work, quantitative / accounting foundation, then relevant coursework and projects",
+      "summaryAngle": "Evaluating managers and strategies: track record, process, risk, fees; IC-ready communication.",
+      "leadWith": "manager due diligence across PE/VC/hedge fund/SMA/MF, real-asset and structured-credit assessment, AI approved-list screening, the quant-strategy evaluation",
       "skillsOrder": [
-        "Financial modeling & forecasting",
-        "Excel / advanced formulas",
-        "Accounting & financial statement analysis",
-        "Power BI / Tableau",
-        "Python / SQL"
+        "Manager & Fund Due Diligence",
+        "Performance Attribution",
+        "Risk-Adjusted Metrics",
+        "Overlap Analysis",
+        "Structured-Credit Basics",
+        "Advanced Excel"
       ],
       "keywords": [
-        "fp&a",
-        "forecasting",
-        "variance analysis",
-        "budgeting",
-        "capital allocation",
-        "working capital"
+        "due diligence",
+        "track record",
+        "fees",
+        "process",
+        "risk",
+        "IC memo"
       ]
     }
   }

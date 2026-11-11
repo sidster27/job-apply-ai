@@ -37,6 +37,16 @@ const cases = [
   ['undergrad AND graduate welcome', J('Asset Management Summer Analyst', 'Boston, MA', 'Investments', 'Undergraduate and graduate students welcome. Fund research and asset management.'), true],
   ['bachelor required is fine',     J('Financial Analyst', 'Chicago, IL', 'Finance', "Bachelor's degree required; master's a plus. FP&A and forecasting."), true],
   ['MBA / master program',          J('Equity Research Associate (MBA / MS)', 'New York, NY', 'Research', "Program for master's and MBA candidates. Buy-side research."), true],
+
+  // protected phrases, MBA-only, AI enablement (v3)
+  ['sales & trading analyst kept',  J('Sales & Trading Summer Analyst', 'New York, NY', 'Markets', 'Global markets, fixed income and equities. Master\'s students welcome.'), true],
+  ['sales and trading full-time',   J('Global Markets Sales and Trading Analyst - 2027', 'New York, NY', 'Markets', 'Full-time analyst program starting summer 2027.'), true],
+  ['principal investing analyst',   J('Principal Investing Analyst', 'Boston, MA', 'Investments', 'Private equity and growth investing.'), true],
+  ['plain sales still dropped',     J('Sales Analyst', 'New York, NY', 'Sales', 'Quota-carrying software sales support, finance a plus.'), false, 'non-finance-domain'],
+  ['MBA-only internship',           J('Private Equity Summer Associate', 'New York, NY', 'Investments', 'Open to first-year MBA candidates only.'), false, 'mba-only'],
+  ['MBA and master welcome',        J('Private Equity Summer Associate', 'New York, NY', 'Investments', "Open to MBA and master's students."), true],
+  ['AI enablement analyst (finance)', J('AI Enablement Analyst', 'New York, NY', 'Investments', 'Drive adoption of generative AI across the investment and portfolio teams of an asset manager.'), true],
+  ['AI analyst at a non-finance firm', J('AI Analyst', 'San Francisco, CA', 'Product', 'Improve our SaaS onboarding assistant and user retention.'), false, 'no-finance-context'],
 ];
 
 let failed = 0;
@@ -63,22 +73,55 @@ const gradJob = evaluate(J('Equity Research Associate (MBA / MS)', 'New York, NY
 assert(gradJob.matched.graduateEligible, 'graduate-eligible postings should be marked');
 console.log('ok    graduate-eligible marked: ' + gradJob.matched.graduateEligible);
 
-// resume variants
+// resume variants (six final resumes; unseen titles fall back to 'base' so tailor-resume researches them)
 const V = [
   ['Equity Research Analyst', 'Boston, MA', 'equity-research'],
-  ['Private Equity Analyst', 'New York, NY', 'asset-mgmt-alternatives'],
-  ['Investment Analyst, Hedge Fund', 'Greenwich, CT', 'asset-mgmt-alternatives'],
-  ['Project Finance Analyst', 'Houston, TX', 'energy-infrastructure'],
-  ['Infrastructure Finance Analyst', 'Dallas, TX', 'energy-infrastructure'],
-  ['FP&A Analyst', 'Atlanta, GA', 'corporate-finance'],
-  ['Financial Analyst Intern', 'New York, NY', 'corporate-finance'],
-  ['Supply Chain Finance Analyst', 'Remote - US', 'corporate-finance'],
+  ['Research Associate, Macro Research', 'New York, NY', 'equity-research'],
+  ['Investment Banking Summer Analyst', 'New York, NY', 'ib-pe'],
+  ['Private Equity Analyst', 'New York, NY', 'ib-pe'],
+  ['Corporate Development Analyst', 'Chicago, IL', 'ib-pe'],
+  ['Sales & Trading Summer Analyst', 'New York, NY', 'trading-investments'],
+  ['Quantitative Research Analyst', 'Chicago, IL', 'trading-investments'],
+  ['Portfolio Analytics Analyst', 'Boston, MA', 'asset-mgmt-portfolio-analytics'],
+  ['Investment Analyst, Asset Management', 'Boston, MA', 'asset-mgmt-portfolio-analytics'],
+  ['AI Enablement Analyst', 'New York, NY', 'asset-mgmt-portfolio-analytics'],
+  ['Project Finance Analyst', 'Houston, TX', 'project-finance-energy-infra'],
+  ['Infrastructure Finance Analyst', 'Dallas, TX', 'project-finance-energy-infra'],
+  ['Manager Due Diligence Analyst', 'Chicago, IL', 'alternatives-manager-dd'],
+  ['Private Credit Analyst', 'New York, NY', 'alternatives-manager-dd'],
+  ['Hedge Fund Analyst', 'Greenwich, CT', 'alternatives-manager-dd'],
+  // no variant fits -> base -> tailor-resume researches the title and picks the nearest variant
+  ['FP&A Analyst', 'Atlanta, GA', 'base'],
+  ['Supply Chain Finance Analyst', 'Remote - US', 'base'],
+  ['Financial Analyst Intern', 'New York, NY', 'base'],
 ];
+const DESC = { 'AI Enablement Analyst': 'Drive adoption of generative AI across the investment and portfolio teams of an asset manager.' };
 for (const [t, l, want] of V) {
-  const r = evaluate(J(t, l, 'Finance', 'Finance role.'), spec);
-  assert(r.keep, t + ' should be kept');
+  const r = evaluate(J(t, l, 'Finance', DESC[t] || 'Finance role. Investments and portfolio work.'), spec);
+  assert(r.keep, t + ' should be kept (reason: ' + r.reason + ')');
   assert.strictEqual(r.variant, want, t + ' -> ' + r.variant + ' (wanted ' + want + ')');
   console.log('ok    variant: ' + t + ' -> ' + r.variant);
+}
+const base = evaluate(J('FP&A Analyst', 'Atlanta, GA', 'Finance', 'Finance role.'), spec);
+assert(base.flags.some((f) => /research it/.test(f)), 'base variant should carry a research flag');
+
+// a learned title overrides the keyword match (uses a temporary title map)
+{
+  const fs = require('fs');
+  const mapPath = path.join(__dirname, '..', 'config', 'role-title-map.json');
+  const original = fs.readFileSync(mapPath, 'utf8');
+  try {
+    const m = JSON.parse(original); m.learned['fp&a analyst'] = 'ib-pe';
+    fs.writeFileSync(mapPath, JSON.stringify(m, null, 2));
+    delete require.cache[require.resolve('../scripts/greenhouse-filter.cjs')];
+    const fresh = require('../scripts/greenhouse-filter.cjs');
+    const r = fresh.evaluate(J('FP&A Analyst', 'Atlanta, GA', 'Finance', 'Finance role.'), spec);
+    assert.strictEqual(r.variant, 'ib-pe', 'learned title should be used');
+    console.log('ok    learned title: FP&A Analyst -> ib-pe');
+  } finally {
+    fs.writeFileSync(mapPath, original);
+    delete require.cache[require.resolve('../scripts/greenhouse-filter.cjs')];
+  }
 }
 
 if (failed) { console.log('\n' + failed + ' failing'); process.exit(1); }

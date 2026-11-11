@@ -1,71 +1,82 @@
 ---
 name: tailor-resume
-description: Tailor the user's resume to a specific finance job description (analyst, research, internship) using only true facts. Use when the user says "tailor resume", "resume for [company]", "optimize resume", or "make resume match". Output is a .docx based on a copy of the user's own resume.
+description: Tailor Siddharth's resume to a specific finance job using only true facts. Picks one of six role-specific resumes, and for an unfamiliar job title researches the role and builds the closest version from the resume bank. Use when the user says "tailor resume", "resume for [company]", "optimize resume", or "make resume match".
 ---
 
 # Resume Tailoring (Finance) - truthful by construction
 
 Tailoring means **choosing, ordering and wording true facts for this job**. It never means adding facts.
 
-## Source of truth
+## Source of truth (in this order)
 
-1. The user's base resume (`Latest_Resume.docx`, kept in the Job Tracker project or in `templates/`). Work on a **copy**; never overwrite the original.
-2. `config/profile.json` (local, git-ignored) and the LinkedIn brief, for dates, titles and contact details.
-3. Anything the user tells you in the conversation.
+1. `data/resume-bank/bank.json` - every true bullet from his six final resumes, tagged by theme (private, git-ignored). Use `node scripts/resume-bank.cjs list | render <variant> | find <theme>`.
+2. His six Word resumes in `resumes/` (`IB-PE.docx`, `Equity-Research.docx`, `Trading-Investments.docx`, `Asset-Management-Portfolio-Analytics.docx`, `Project-Finance-Energy-Infrastructure.docx`, `Alternatives-Manager-Due-Diligence.docx`). Work on a **copy**; never overwrite them. They follow the Amod template layout.
+3. `config/profile.json` (local) for contact details, and anything he tells you in the conversation.
 
-If a fact is not in those places, it does not go on the resume.
+If a fact is not in those places, it does not go on the resume. When he gives a new true fact, add it to the bank first (with tags), then use it.
 
-## Framing: make the strongest honest case
+## The six variants (`config/search-spec.json` -> `resumeVariants`)
 
-The goal is the best possible *true* version of the applicant. Do:
-- Lead with the most impressive true work for this role and give it room.
-- Use strong, specific verbs and say what the work was *for* and who used it (IC, clients, a team decision).
-- Spell out real scope: how many funds / products / companies, which asset classes, which tools.
-- Use numbers the applicant gives you. If they give an approximation, write it as an approximation ("~"), in their words.
-- Connect coursework, projects and competitions to the job when they are real.
+| id | Fits titles such as |
+|---|---|
+| `ib-pe` | Investment Banking, M&A, Private Equity, Venture, Growth Equity, Corporate Development |
+| `equity-research` | Equity Research, Buy-side Research, Investment Analyst, Sector Analyst |
+| `trading-investments` | Sales & Trading, Markets, Macro, Rates, Quant/Systematic, Investment Analyst on a trading or investments desk |
+| `asset-mgmt-portfolio-analytics` | Asset Management, Portfolio Analytics, Performance/Risk, Wealth, Investment Strategy |
+| `project-finance-energy-infra` | Project Finance, Energy, Infrastructure, Real Assets, Structured/Credit |
+| `alternatives-manager-dd` | Alternatives, Hedge Fund / Fund-of-Funds, Manager Due Diligence, Investment Due Diligence, Manager Research |
+| `base` | No clear match (see "Unfamiliar titles") |
 
-Do **not** stretch beyond what happened. If a stronger claim would need a bigger number, a bigger title, a bigger scope, a tool the applicant has not used, or a credential not held, **do not write it**. Ask the applicant for the real detail instead - there is usually a stronger true version than the first draft. Finance employers verify employment, titles and credentials, so an overstated line can cost an offer later.
+A variant is an **emphasis choice**: employers, titles, dates, education and every number are identical. Only which true bullets lead, their wording, and the skills line change.
 
-## Hard rules
+## Step 1 - Read the job and get the filter's suggestion
 
-- **No invented numbers, metrics, deal sizes, AUM figures, tools, titles, dates, certifications or coursework.**
-- **No padding.** Do not add bullets to reach a count and do not "expand" a role with plausible-sounding work. A short role stays short.
-- **No keyword stuffing.** A skill appears in the Skills section only if the user actually has it. A job requirement the resume cannot honestly support is reported as a **gap** to the user, not written onto the page.
-- **Reframing is allowed:** same facts, vocabulary that matches the posting (e.g. "fund manager due diligence" vs "manager research") when it describes what was actually done.
-- Do not claim a credential the user has not earned (CFA Level I passed vs candidate vs not started - state exactly what is true; ask if unsure).
-- If unsure whether something is true, **ask the user**; do not guess.
+The filter (`node scripts/greenhouse-filter.cjs`) outputs `resumeVariant` and `variantRanking` for every kept job; `config/role-title-map.json` holds titles he has already confirmed. Read the full posting: real day-to-day work, what is listed first or repeated, seniority, class year, tools, credentials. Titles lie; the work decides.
 
-## Steps
+## Step 2 - Known title (variant is not `base`, no tie flag)
 
-1. **Read the job description.** Identify the real work, the sector, what is emphasised (listed first / repeated), seniority, class-year, required tools and credentials.
-2. **Use the job's variant** (`resumeVariant` from the filter output; definitions in `config/search-spec.json` -> `resumeVariants`). A variant is an emphasis and ordering choice, **not different content**: the applicant has only a few roles, so employers, titles and dates are identical in every variant. What changes is the summary angle, which work leads, skills order and keywords.
-   - `equity-research` - Equity Research / Buy-side research
-   - `asset-mgmt-alternatives` - Asset Management & Alternatives
-   - `energy-infrastructure` - Energy & Infrastructure Finance
-   - `corporate-finance` - Corporate Finance (incl. FP&A, treasury, supply chain finance, credit-type roles)
-   - `base` - fallback when nothing clearly fits
-   Each variant has its own `.docx` kept locally / in the Job Tracker project. Start from the matching variant file, then tailor to the specific posting.
-3. **Score coverage.** Compare JD keywords (`src/tailor/resume-tailor.ts` -> `computeMatchScore`) with the base resume. The score is a *coverage signal*, not a target to hit at any cost. Missing keywords split into:
-   - *true but unstated* -> reword an existing bullet to include it
-   - *not true / not held* -> list as a gap
-4. **Edit the copy:**
-   - Reorder roles' bullets so the most relevant true work comes first; trim bullets that distract.
-   - Rewrite the summary (2-3 lines) for this role using only true claims.
-   - Reorder the Skills section so what the posting asks for and the user truly has comes first.
-   - Keep every number exactly as in the base resume.
-5. **Check:** every bullet traces to the base resume or user input; dates / titles / employers unchanged; spelling of firm and role names matches the posting; fits 1 page (2 only if the base already needs it).
-6. **Report to the user:** what was reordered / reworded, the coverage score before and after, and the **gaps list** (requirements not supported, credentials not held, anything you asked about).
+Start from the variant text (`node scripts/resume-bank.cjs render <variant> --out /tmp/draft.txt`), then go to Step 4.
 
-## Formatting
+## Step 3 - Unfamiliar title (variant is `base`, or the filter says "tie" / "no variant matches")
 
-Use the user's own `.docx` as the template: copy it, then replace text paragraph by paragraph (python-docx or direct XML edit), preserving styles, numbering, fonts, margins and links. Do not rebuild the document from scratch. No tables, text boxes or images for content (ATS parsing). Standard section names: SUMMARY, EDUCATION, EXPERIENCE, SKILLS, CERTIFICATIONS.
+His resumes cover six role families, but job titles vary a lot ("Investment Strategy Analyst", "Credit Risk Associate", "Fund Operations Analyst", "Treasury Analyst"). Do not guess from the title alone:
+
+1. **Research the role** (official sources first: the posting itself, the firm's careers and about pages, regulatory filings; then credible industry sources). Capture what the person actually does, the vocabulary practitioners use, the tools named, and the credentials expected.
+2. **Write a short role brief** in `notes.md`: 5-8 lines - what the work is, which of his six families it is closest to and why, which tags from the bank it needs (e.g. `due-diligence`, `risk-metrics`, `valuation`, `macro`, `excel-modeling`, `credit`).
+3. **Choose the nearest variant** and **tell him which one and why** before building. If two fit, say so and ask. He confirms.
+4. **Build from the bank, not from imagination:** `node scripts/resume-bank.cjs find <tag> <tag>` lists the true bullets that carry those tags. Start from the nearest variant, then swap in or reorder bullets from other employers' variants where the tags fit the role better. A role may also need fewer bullets; do not pad.
+5. After he approves the resume, **save the title** so the filter picks it next time:
+   `node scripts/learn-title.cjs "<exact job title>" <variant-id>`
+
+## Step 4 - Tailor the draft (allowed edits only)
+
+- **Reorder** bullets within a role so the most relevant true work leads. Reorder or drop bullets that distract.
+- **Swap** a bullet for another true bullet from the bank (same employer only; a bullet never moves to a different employer).
+- **Reword vocabulary** to match the posting when it honestly describes the same work (e.g. "manager due diligence" vs "manager research"). Keep every number, scale, tool and outcome exactly as in the bank.
+- **Skills line:** reorder; add a skill only if it is in the bank's allowed skills or he explicitly confirms he has it. A requirement he cannot back (CFA, a language, Python library, Argus, Capital IQ, VBA, SQL, etc.) is reported as a **gap**, never written onto the page.
+- Employers, titles, dates, degree, expected graduation (May 2027) and contact details are never altered.
+- One page. Same layout, fonts and section names as the Amod template: Education, Professional Experience, Experiential Learning, Additional Information. No tables, text boxes or images for content.
+
+## Step 5 - Check (mandatory, run it)
+
+Save the final plain text and run:
+
+```
+node scripts/resume-bank.cjs facts /path/to/final.txt
+```
+
+It fails on any number, tool or bullet that cannot be traced to the bank. Resolve every FAIL (remove it, or ask him for the real fact and add it to the bank). Also check: fits one page after rendering to PDF, company and role spelled as in the posting where the resume mentions them, nothing duplicated from another bullet.
+
+## Step 6 - Report
+
+Tell him: variant used (and the title-research summary if it was unfamiliar), what was reordered/swapped/reworded, the **gaps list** (requirements he cannot honestly claim), and any question you need answered. Offer the title save if it was a new title.
+
+## Do not
+
+- Invent numbers, tools, titles, certifications, coursework, AUM figures or outcomes; stretch a claim; keyword-stuff; claim credentials not held (state CFA/exam status exactly as he gives it).
+- Mention that a role was "AI-generated" or reveal tooling in the resume.
+- Overwrite originals.
 
 ## Output
 
-Save to `data/resumes/{company-slug}-{jobId}/` as `FirstName_LastName_Resume.docx` (a clean, standard filename; the folder carries the job identity). Also save `notes.md` there with: variant used, coverage before / after, changes made, gaps, open questions.
-
-## Key files
-
-- `config/search-spec.json` - roles, sectors, keywords
-- `src/tailor/resume-tailor.ts` - keyword extraction and coverage scoring (finance vocabulary)
-- `templates/` - sample resume text for the code path; the real resume and the variant `.docx` files live with the user (git-ignored)
+`data/resumes/{company-slug}-{jobId}/Siddharth_Bhatia_Resume.docx` (edit a copy of the chosen variant `.docx` with python-docx, preserving styles) and `notes.md` containing: variant, role brief (if researched), changes, gaps, questions. Convert to PDF to check the page count; attach the PDF unless the form asks for Word.

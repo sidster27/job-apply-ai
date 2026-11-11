@@ -14,10 +14,14 @@
     "pull": "node scripts/greenhouse-pull.cjs",
     "pull:today": "node scripts/greenhouse-pull.cjs --days 1",
     "filter": "node scripts/greenhouse-filter.cjs",
-    "test": "node tests/filter.test.cjs",
+    "test": "node tests/filter.test.cjs && node tests/sources.test.cjs && node tests/resume-bank.test.cjs",
     "apply": "node scripts/greenhouse-apply.cjs --dry-run",
     "apply:submit": "node scripts/greenhouse-apply.cjs",
-    "pipeline": "node scripts/greenhouse-pull.cjs && node scripts/greenhouse-filter.cjs && echo 'Ready to apply. Run: npm run apply'"
+    "pipeline": "node scripts/greenhouse-pull.cjs && node scripts/greenhouse-filter.cjs && echo 'Ready to apply. Run: npm run apply'",
+    "detect": "node scripts/detect-ats.cjs",
+    "add-source": "node scripts/add-source.cjs",
+    "bank": "node scripts/resume-bank.cjs",
+    "verify-slugs": "node scripts/verify-slugs.cjs"
   },
   "dependencies": {
     "better-sqlite3": "^9.4.3",

@@ -1,0 +1,79 @@
+{
+  "_description": "Where jobs come from and how each source may be handled. Read by scripts/detect-ats.cjs and the apply-careers skill. To add a source later: node scripts/add-source.cjs source --id <id> --label \"<name>\" --host <domain> [--route user-driven|auto-fill-with-approval|read-then-decide] [--account] -- no code changes needed.",
+  "version": 1,
+  "routes": {
+    "auto-fill-with-approval": "Claude (Playwright MCP) opens the application, fills it from profile.json + the tailored resume, takes a screenshot, and waits for the user's explicit per-role 'submit'. The user handles any login, CAPTCHA, or verification email.",
+    "user-driven": "The user opens and drives the site in their own logged-in browser. Claude only reads the page the user has open, tailors the resume, and drafts answers for the user to paste. No crawling, no scripted searching, no bulk collection. Used where the site's terms prohibit automated access (Handshake, LinkedIn, Indeed, Glassdoor).",
+    "read-then-decide": "Unknown or custom careers site: Claude reads the posting, runs detect-ats on the Apply link, then routes by what the Apply button leads to. If the form is an unfamiliar flow, fall back to user-driven."
+  },
+  "sources": [
+    {
+      "id": "greenhouse",
+      "label": "Greenhouse job boards",
+      "mode": "api",
+      "discovery": "scripts/greenhouse-pull.cjs reads config/greenhouse-companies.json (finance slugs; check them with scripts/verify-slugs.cjs).",
+      "route": "auto-fill-with-approval",
+      "requiresAccount": false,
+      "notes": "Public JSON API for discovery. Many firms embed a Greenhouse form inside their own careers page (URL has ?gh_jid=...): detect-ats flags these as greenhouse-embedded."
+    },
+    {
+      "id": "careers-pages",
+      "label": "Firm careers pages (the Target Company List)",
+      "mode": "read-page",
+      "discovery": "config/careers-sources.json lists each firm's careers URL and its ATS. Claude reads those pages with WebFetch/Playwright, one firm at a time, and lists matching postings. New firms are added with scripts/add-source.cjs company.",
+      "route": "read-then-decide",
+      "requiresAccount": "depends on the ATS behind the Apply button",
+      "notes": "Many firm pages only link out to Workday, Oracle, Tal.net or Eightfold: the real application is on that ATS (see below)."
+    },
+    {
+      "id": "workday",
+      "label": "Workday (*.myworkdayjobs.com)",
+      "mode": "read-page",
+      "route": "auto-fill-with-approval",
+      "requiresAccount": true,
+      "notes": "One account per employer tenant. The user creates the account / signs in and handles the verification email and any CAPTCHA; Claude never asks for or types a password. See docs/workday-ats-guide.md."
+    },
+    {
+      "id": "other-ats",
+      "label": "Lever, Ashby, SmartRecruiters, Workable, Jobvite, iCIMS, Oracle Cloud, Taleo, SuccessFactors, Tal.net, Eightfold",
+      "mode": "read-page",
+      "route": "auto-fill-with-approval",
+      "requiresAccount": "often (Oracle, Taleo, SuccessFactors, Tal.net, iCIMS)",
+      "notes": "Patterns are in scripts/detect-ats.cjs. Heavy JavaScript boards (Oracle, Eightfold) sometimes cannot be read automatically: open them in the browser and continue user-driven."
+    },
+    {
+      "id": "handshake",
+      "label": "Handshake (school job board)",
+      "mode": "user-driven",
+      "route": "user-driven",
+      "requiresAccount": true,
+      "hosts": ["joinhandshake.com"],
+      "notes": "Handshake's terms prohibit bulk scraping and automated crawlers, so it is never scraped. The user logs in and browses; Claude reads only the posting page the user has open, tailors the resume and drafts answers. If 'Apply' sends the user to the employer's own site, that site is handled by its own ATS route (redirect handling below)."
+    },
+    {
+      "id": "linkedin",
+      "label": "LinkedIn Jobs",
+      "mode": "user-driven",
+      "route": "user-driven",
+      "requiresAccount": true,
+      "hosts": ["linkedin.com"],
+      "notes": "Same rule as Handshake: no automated collection. Use it to find roles, then apply through the employer's careers page where possible. LinkedIn connections and cold emails are a later stage with low daily caps."
+    },
+    {
+      "id": "aggregators",
+      "label": "Indeed, Glassdoor, ZipRecruiter and similar",
+      "mode": "user-driven",
+      "route": "user-driven",
+      "requiresAccount": false,
+      "hosts": ["indeed.com", "glassdoor.com", "ziprecruiter.com", "simplyhired.com"],
+      "notes": "Treated like Handshake. Always find the employer's own posting and apply there."
+    }
+  ],
+  "redirects": {
+    "_description": "Postings found on Handshake, LinkedIn, Indeed or in email often 'Apply' by bouncing to the employer's careers site or ATS. The rule: never treat the aggregator as the destination. Unwrap the link, identify the real ATS with detect-ats, and use that ATS's route. A link that just lands back on the firm's careers page is a search page, not an application: find the specific posting there, then continue.",
+    "wrapperParams": ["url", "u", "redirect", "redirect_url", "redirecturl", "dest", "destination", "target", "externalapplyurl", "applyurl", "link"],
+    "followRedirectsMax": 8,
+    "neverFetchHosts": ["joinhandshake.com", "linkedin.com", "indeed.com", "glassdoor.com", "ziprecruiter.com"]
+  },
+  "custom": []
+}

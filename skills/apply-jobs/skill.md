@@ -3,6 +3,8 @@ name: apply-jobs
 description: Apply to jobs using Playwright MCP browser automation. Use when the user says "apply to jobs", "start applying", "submit application", "fill this form", or "batch apply". Works with Greenhouse, Lever, Workday, and any ATS.
 ---
 
+> **Finance fork notes (read first):** `next-job.cjs`, `progress-update.cjs` and the 10-browser layout below are from the upstream project and are **not in this fork**. Work one job at a time with the single Playwright MCP browser, track in `Pilot_Tracker.xlsx`, never submit without his per-role "submit", and never ask for passwords. For jobs that are not plain Greenhouse boards (careers pages, Workday, Handshake, redirects) use `skills/apply-careers/skill.md`.
+
 # Apply to Jobs — Parallel Greenhouse Pipeline
 
 Automated job application pipeline using Playwright MCP browsers.

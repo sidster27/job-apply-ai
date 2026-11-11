@@ -1,0 +1,6 @@
+{
+  "_description": "Titles the tailor-resume skill has already researched, mapped to one of the six resume variants. Read by scripts/greenhouse-filter.cjs (pickVariant). Add entries with: node scripts/learn-title.cjs \"<exact job title>\" <variant-id> [--note \"why\"]. 'learned' is exact-title (case-insensitive, punctuation ignored); the keyword lists in config/search-spec.json -> resumeVariants handle everything else.",
+  "variants": ["ib-pe", "equity-research", "trading-investments", "asset-mgmt-portfolio-analytics", "project-finance-energy-infra", "alternatives-manager-dd"],
+  "learned": {},
+  "notes": {}
+}

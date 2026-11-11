@@ -1,0 +1,404 @@
+{
+  "_description": "Careers pages for the firms on the Target Company List that have a known URL (from the Job Tracker project's Careers_Sources files, scans of 2026-11-09 and 2026-11-10). 'ats' is auto-detected from the URL (scripts/detect-ats.cjs); 'system' is what the scan found. Many firms are only 'custom-careers': the real ATS shows up behind the Apply button. Add firms with: node scripts/add-source.cjs company \"Firm\" --url <careers url>. The other ~690 firms live in the Firm Database (see docs/job-sources.md).",
+  "updated": "2026-11-11",
+  "companies": [
+    {
+      "name": "Citi",
+      "tl": 29,
+      "metro": "NYC",
+      "url": "https://jobs.citi.com/summer-analyst-programs",
+      "ats": "custom-careers",
+      "system": "Custom careers site",
+      "note": "Markets Summer Analyst NYC 2027 listed Nov 10; closes about Nov 13. Summer Associate (master's/MBA): ask Career Services which divisions take master's students."
+    },
+    {
+      "name": "Barclays (US Investment Bank)",
+      "tl": 125,
+      "metro": "NYC",
+      "url": "https://search.jobs.barclays/",
+      "ats": "custom-careers",
+      "system": "Custom careers site",
+      "note": "Status unconfirmed on Nov 10; search the requisition numbers in a browser."
+    },
+    {
+      "name": "Deutsche Bank (Americas)",
+      "tl": 126,
+      "metro": "NYC",
+      "url": "https://careers.db.com/",
+      "ats": "custom-careers",
+      "system": "Custom careers site",
+      "note": "IB early recruitment opens Dec 15, 2026."
+    },
+    {
+      "name": "Wells Fargo (CIB)",
+      "tl": 129,
+      "metro": "NYC",
+      "url": "https://www.wellsfargojobs.com/en/jobs/",
+      "ats": "custom-careers",
+      "system": "Custom careers site",
+      "note": "R-572907 (Equity Research Analyst, BIS, NYC) unconfirmed on Nov 10."
+    },
+    {
+      "name": "BlackRock",
+      "tl": 1,
+      "metro": "NYC",
+      "url": "https://careers.blackrock.com/",
+      "ats": "custom-careers",
+      "system": "Custom careers site",
+      "note": "Students & Graduates - Americas; AMRS MBA internship excluded (MBA-only)."
+    },
+    {
+      "name": "Citadel & Citadel Securities",
+      "tl": 159,
+      "metro": "NYC",
+      "url": "https://www.citadel.com/careers/",
+      "ats": "custom-careers",
+      "system": "Custom careers site",
+      "note": "Equities CAP full-time 2027 and CAP summer 2027 (New York)."
+    },
+    {
+      "name": "Morgan Stanley (Institutional Securities)",
+      "tl": 121,
+      "metro": "NYC",
+      "url": "https://www.morganstanley.com/people-opportunities/students-graduates",
+      "ats": "custom-careers",
+      "system": "Custom careers site (JavaScript)",
+      "note": "Not confirmable by automated read; open in a browser."
+    },
+    {
+      "name": "Bank of America Securities",
+      "tl": 124,
+      "metro": "NYC",
+      "url": "https://careers.bankofamerica.com/en-us/students/",
+      "ats": "custom-careers",
+      "system": "Custom careers site",
+      "note": "Global Markets S&T Summer Associate 2027 (14770) closes Nov 15; IB Summer Associate is MBA-only."
+    },
+    {
+      "name": "Blackstone",
+      "tl": 144,
+      "metro": "NYC",
+      "url": "https://www.blackstone.com/careers/students/",
+      "ats": "custom-careers",
+      "system": "Custom careers site",
+      "note": "Summer Analyst is junior-year undergrads / first-year MBAs; Full-Time Analyst posted from July."
+    },
+    {
+      "name": "KKR",
+      "tl": 145,
+      "metro": "NYC",
+      "url": "https://www.kkr.com/careers/student-careers",
+      "ats": "custom-careers",
+      "system": "Custom careers site",
+      "note": "Programs named; no dates. Use Explore current opportunities."
+    },
+    {
+      "name": "Apollo Global Management",
+      "tl": 146,
+      "metro": "NYC",
+      "url": "https://careersatapollo.apollo.com/careers",
+      "ats": "custom-careers",
+      "system": "Custom careers site",
+      "note": "Portal blocks automated fetch; use a browser."
+    },
+    {
+      "name": "The Carlyle Group",
+      "tl": 147,
+      "metro": "NYC",
+      "url": "https://www.carlyle.com/careers",
+      "ats": "custom-careers",
+      "system": "Custom careers site",
+      "note": "No early-career programs listed."
+    },
+    {
+      "name": "Lazard",
+      "tl": 95,
+      "metro": "NYC",
+      "url": "https://www.lazard.com/careers/",
+      "ats": "custom-careers",
+      "system": "Oracle Cloud (external student board)",
+      "note": "Open the Oracle student board in a browser.",
+      "behindApply": "oracle-cloud"
+    },
+    {
+      "name": "Moelis & Company",
+      "tl": 96,
+      "metro": "NYC",
+      "url": "https://www.moelis.com/careers/",
+      "ats": "custom-careers",
+      "system": "External application portal",
+      "note": "Students & Graduates portal; details not on the page."
+    },
+    {
+      "name": "PJT Partners",
+      "tl": 97,
+      "metro": "NYC",
+      "url": "https://pjtpartners.wd1.myworkdayjobs.com/Students",
+      "ats": "workday",
+      "system": "Workday",
+      "note": "Summer Analyst opens spring of the prior year; Summer Associate is MBA-level.",
+      "tenant": "pjtpartners"
+    },
+    {
+      "name": "Jefferies",
+      "tl": 15,
+      "metro": "NYC",
+      "url": "https://jefferies.tal.net/",
+      "ats": "talnet",
+      "system": "Tal.net",
+      "note": "Associate track for master's/MBA holders; open reqs not read."
+    },
+    {
+      "name": "Perella Weinberg Partners",
+      "tl": 117,
+      "metro": "NYC",
+      "url": "https://pwpartners.com/careers/intern-graduate-recruitment/",
+      "ats": "custom-careers",
+      "system": "Workday (PWP_Experienced_Opportunities) + program page",
+      "note": "Summer Analysts recruit in winter; full-time in August.",
+      "behindApply": "workday"
+    },
+    {
+      "name": "Warburg Pincus",
+      "tl": 149,
+      "metro": "NYC",
+      "url": "https://www.warburgpincus.com/careers/",
+      "ats": "custom-careers",
+      "system": "Custom careers site",
+      "note": "No analyst or summer programs listed."
+    },
+    {
+      "name": "General Atlantic",
+      "tl": 150,
+      "metro": "NYC",
+      "url": "https://www.generalatlantic.com/careers/",
+      "ats": "custom-careers",
+      "system": "Custom careers site + Greenhouse talent community",
+      "note": "Use the open-roles page."
+    },
+    {
+      "name": "Point72",
+      "tl": 158,
+      "metro": "NYC",
+      "url": "https://www.point72.com/careers/",
+      "ats": "custom-careers",
+      "system": "Custom careers site",
+      "note": "Point72 Academy is for undergraduates."
+    },
+    {
+      "name": "Millennium Management",
+      "tl": 157,
+      "metro": "NYC",
+      "url": "https://mlp.eightfold.ai/careers",
+      "ats": "eightfold",
+      "system": "Eightfold",
+      "note": "JavaScript board; not readable automatically."
+    },
+    {
+      "name": "AQR Capital Management",
+      "tl": 69,
+      "metro": "NYC metro",
+      "url": "https://www.aqr.com/Our-Firm/Careers",
+      "ats": "custom-careers",
+      "system": "Custom careers site",
+      "note": "Careers page not read yet."
+    },
+    {
+      "name": "Stonepeak",
+      "tl": 153,
+      "metro": "NYC",
+      "url": "https://www.stonepeak.com/careers",
+      "ats": "custom-careers",
+      "system": "Custom careers site",
+      "note": "Fetch failed Nov 10; retry in a browser."
+    },
+    {
+      "name": "MSCI",
+      "tl": 43,
+      "metro": "NYC",
+      "url": "https://careers.msci.com/",
+      "ats": "custom-careers",
+      "system": "Custom careers site",
+      "note": "32 New York jobs; titles not itemized."
+    },
+    {
+      "name": "S&P Global",
+      "tl": 44,
+      "metro": "NYC",
+      "url": "https://careers.spglobal.com/jobs",
+      "ats": "custom-careers",
+      "system": "Custom careers site",
+      "note": "Filter by New York and ratings / market intelligence."
+    },
+    {
+      "name": "AlphaSense",
+      "tl": 142,
+      "metro": "NYC",
+      "url": "https://job-boards.greenhouse.io/alphasense",
+      "ats": "greenhouse",
+      "system": "Greenhouse",
+      "note": "Board read Nov 10; no entry-level roles.",
+      "slug": "alphasense"
+    },
+    {
+      "name": "KBRA (Kroll Bond Rating Agency)",
+      "tl": 93,
+      "metro": "NYC",
+      "url": "https://job-boards.greenhouse.io/krollbondratingagency",
+      "ats": "greenhouse",
+      "system": "Greenhouse",
+      "note": "Project Finance & Infrastructure Analyst (8694024002) and Funds Ratings Analyst (8444423002), NYC. Rescan weekly.",
+      "slug": "krollbondratingagency"
+    },
+    {
+      "name": "PitchBook Data",
+      "tl": 219,
+      "metro": "Seattle / WA",
+      "url": "https://job-boards.greenhouse.io/pitchbookdata",
+      "ats": "greenhouse",
+      "system": "Greenhouse",
+      "note": "Board read Nov 10; no matching roles.",
+      "slug": "pitchbookdata"
+    },
+    {
+      "name": "Tradeweb Markets",
+      "tl": 233,
+      "metro": "NYC",
+      "url": "https://www.tradeweb.com/careers",
+      "ats": "custom-careers",
+      "system": "Custom careers site",
+      "note": "Summer Internship page seen; no front-office role confirmed."
+    },
+    {
+      "name": "Insight Partners",
+      "tl": 235,
+      "metro": "NYC",
+      "url": "https://info.insightpartners.com/Summer-Analyst-Program.html",
+      "ats": "custom-careers",
+      "system": "Custom program page (HireVue application)",
+      "note": "Investment Summer Analyst (NYC), rolling to May 1, 2027.",
+      "behindApply": "hirevue"
+    },
+    {
+      "name": "Geode Capital Management",
+      "tl": 238,
+      "metro": "Boston",
+      "url": "https://www.geodecapital.com/careers",
+      "ats": "custom-careers",
+      "system": "Custom careers site",
+      "note": "No open roles Nov 10."
+    },
+    {
+      "name": "Aksia",
+      "tl": 119,
+      "metro": "NYC",
+      "url": "https://job-boards.greenhouse.io/aksia",
+      "ats": "greenhouse",
+      "system": "Greenhouse",
+      "note": "No 2027 intern posting; Pan-Alts analyst roles ask 2-6 years.",
+      "slug": "aksia"
+    },
+    {
+      "name": "UVIMCO",
+      "tl": 118,
+      "metro": "Other",
+      "url": "https://job-boards.greenhouse.io/uvimco",
+      "ats": "greenhouse",
+      "system": "Greenhouse",
+      "note": "2027 Summer Investment Intern closed 5/24/2026; recheck spring 2027.",
+      "slug": "uvimco"
+    },
+    {
+      "name": "J.P. Morgan Asset Management",
+      "tl": 4,
+      "metro": "NYC",
+      "url": "https://www.jpmorganchase.com/careers",
+      "ats": "custom-careers",
+      "system": "Oracle HCM (JavaScript)",
+      "note": "AM Summer Analyst Program page recorded.",
+      "behindApply": "oracle-cloud"
+    },
+    {
+      "name": "UBS Asset Management / Investment Bank",
+      "tl": 5,
+      "metro": "NYC",
+      "url": "https://www.ubs.com/global/en/careers.html",
+      "ats": "custom-careers",
+      "system": "Custom careers site (JavaScript)",
+      "note": "Job pages returned link-no-longer-valid templates; use a browser."
+    },
+    {
+      "name": "Neuberger Berman",
+      "tl": 9,
+      "metro": "NYC",
+      "url": "https://www.nb.com/en/global/careers",
+      "ats": "custom-careers",
+      "system": "Custom careers site",
+      "note": "Rescan for analyst / associate programs."
+    },
+    {
+      "name": "Goldman Sachs",
+      "tl": 30,
+      "metro": "NYC",
+      "url": "https://higher.gs.com/",
+      "ats": "custom-careers",
+      "system": "Custom careers site (JavaScript)",
+      "note": "AM Private Investing Summer Associate and AM Quantitative Investing Summer Analyst seen; verify in a browser."
+    },
+    {
+      "name": "Moody's",
+      "tl": 32,
+      "metro": "NYC",
+      "url": "https://careers.moodys.com/",
+      "ats": "custom-careers",
+      "system": "Custom careers site",
+      "note": "Ratings & Research Support Summer Intern closed Nov 8; watch for the 2028 cycle."
+    },
+    {
+      "name": "Evercore",
+      "tl": 75,
+      "metro": "NYC",
+      "url": "https://www.evercore.com/careers/",
+      "ats": "custom-careers",
+      "system": "Custom careers site",
+      "note": "Watch Evercore ISI Equities and Private Capital Markets / Debt Advisory (NY)."
+    },
+    {
+      "name": "Fidelity Investments",
+      "tl": 6,
+      "metro": "Boston",
+      "url": "https://jobs.fidelity.com/",
+      "ats": "custom-careers",
+      "system": "Custom careers site",
+      "note": "Quantitative Research Internship; Equity Research Analyst Internship is first-year MBA only."
+    },
+    {
+      "name": "PIMCO",
+      "tl": 40,
+      "metro": "California",
+      "url": "https://www.pimco.com/us/en/careers",
+      "ats": "custom-careers",
+      "system": "Custom careers site",
+      "note": "Masters Quant Research Analyst Intern R106816, Newport Beach."
+    },
+    {
+      "name": "MarketAxess",
+      "tl": 234,
+      "metro": "NYC",
+      "url": "https://www.marketaxess.com/",
+      "ats": "custom-careers",
+      "system": "Custom careers site",
+      "note": "Not scanned yet; pending ICE acquisition."
+    },
+    {
+      "name": "Quantum Capital Group",
+      "tl": 240,
+      "metro": "Other",
+      "url": "https://www.quantumcap.com/",
+      "ats": "custom-careers",
+      "system": "Custom site",
+      "note": "No careers page seen."
+    }
+  ],
+  "_behindApplyNote": "behindApply = the ATS the Apply button leads to when the careers page itself is only a landing page."
+}

@@ -3,6 +3,8 @@ name: master-apply
 description: End-to-end job application pipeline. Orchestrates all skills in order — search, filter, resume, apply. Use when the user says "start the pipeline", "run the full pipeline", "apply to everything", "batch apply", or "master apply".
 ---
 
+> **Finance fork notes (read first):** This pipeline runs as a **pilot of 5-10 roles**. Order: pull -> filter (`config/search-spec.json`, six resume variants) -> his batch approval -> tailor (`skills/tailor-resume`) -> apply (`skills/apply-jobs` for Greenhouse, `skills/apply-careers` for everything else) -> log in `Pilot_Tracker.xlsx`. Nothing is submitted without his per-role "submit". He handles logins and CAPTCHAs; never ask for passwords. Handshake/LinkedIn are user-driven only.
+
 # Master Apply — Full Pipeline Orchestrator
 
 Runs the complete job application pipeline from search to submission. **The LLM makes every decision. Scripts are just tools to fetch data — never to make choices.**

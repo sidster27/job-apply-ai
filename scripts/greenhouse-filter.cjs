@@ -13,6 +13,9 @@
  * Reads  data/jobs/greenhouse-jobs.json (output of greenhouse-pull.cjs)
  * Writes data/jobs/greenhouse-filtered.json  (kept jobs sorted by score, plus removed jobs with reasons)
  *
+ * Also assigns one of the six resume variants (see config/search-spec.json -> resumeVariants and
+ * config/role-title-map.json for titles learned from earlier research).
+ *
  * This is a fast first pass (title/department/location/description heuristics).
  * The job-filters skill then has Claude read the full job descriptions of what survives.
  */
@@ -73,17 +76,52 @@ function classYearSignal(text, classYear) {
   return null;
 }
 
-/** Pick the resume variant for a job: title terms weigh 3, sector hits weigh 1; no match -> 'base'. */
-function pickVariant(title, sectorsHit, spec) {
+const TITLE_MAP_PATH = path.join(BASE, 'config', 'role-title-map.json');
+let titleMapCache = null;
+function loadTitleMap() {
+  if (titleMapCache) return titleMapCache;
+  try { titleMapCache = JSON.parse(fs.readFileSync(TITLE_MAP_PATH, 'utf8')); }
+  catch (e) { titleMapCache = { learned: {}, aliases: {} }; }
+  return titleMapCache;
+}
+function normTitle(t) {
+  return String(t || '').toLowerCase().replace(/[‘’]/g, "'").replace(/[^a-z0-9&/+' ]+/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+/**
+ * Rank every resume variant for a job. Title terms weigh 3, sector hits weigh 1.
+ * Ties go to the variant listed first in the spec. Returns [{ id, score, titleTerms, sectors }] best first.
+ */
+function rankVariants(title, sectorsHit, spec) {
   const variants = spec.resumeVariants || {};
-  let best = 'base';
-  let bestScore = 0;
+  const out = [];
   for (const [id, v] of Object.entries(variants)) {
     if (id.startsWith('_') || id === 'base') continue;
-    const s = 3 * hits(title, v.matchTitles).length + (sectorsHit || []).filter((k) => (v.matchSectors || []).includes(k)).length;
-    if (s > bestScore) { best = id; bestScore = s; }
+    const titleTerms = hits(title, v.matchTitles);
+    const sectors = (sectorsHit || []).filter((k) => (v.matchSectors || []).includes(k));
+    out.push({ id, score: 3 * titleTerms.length + sectors.length, titleTerms, sectors });
   }
-  return best;
+  return out.sort((a, b) => b.score - a.score);
+}
+
+/**
+ * Pick the resume variant for a job.
+ * 1) A title the user already researched and approved (config/role-title-map.json -> learned) wins.
+ * 2) Otherwise the best-scoring variant; no score -> 'base' (tailor-resume then researches the title).
+ */
+function pickVariant(title, sectorsHit, spec) {
+  const learned = (loadTitleMap().learned || {})[normTitle(title)];
+  if (learned && spec.resumeVariants && spec.resumeVariants[learned]) return learned;
+  const ranked = rankVariants(title, sectorsHit, spec);
+  return ranked.length && ranked[0].score > 0 ? ranked[0].id : 'base';
+}
+
+/** Blank protected phrases (e.g. "sales and trading") out of a title before the level / domain checks. */
+function stripProtected(title, spec) {
+  let t = String(title || '').toLowerCase().replace(/[‘’]/g, "'");
+  const phrases = [].concat(spec.exclude.protectedPhrases || []).sort((a, b) => b.length - a.length);
+  for (const ph of phrases) t = t.split(ph.toLowerCase()).join(' ');
+  return t;
 }
 
 /**
@@ -102,13 +140,13 @@ function evaluate(job, spec, opts = {}) {
   const drop = (reason) => ({ keep: false, reason, flags, matched });
 
   // 1. Level exclusions in the title (with exceptions like "manager research")
-  let titleForLevel = title.toLowerCase();
+  let titleForLevel = stripProtected(title, spec);
   for (const ex of spec.exclude.levelExceptions || []) titleForLevel = titleForLevel.split(ex).join(' ');
   const levelHit = hits(titleForLevel, spec.exclude.levelInTitle);
   if (levelHit.length) return drop('too-senior: ' + levelHit[0]);
 
   // 2. Non-finance domain exclusions in the title
-  const domainHit = hits(title, spec.exclude.domainInTitle);
+  const domainHit = hits(stripProtected(title, spec), spec.exclude.domainInTitle);
   if (domainHit.length) return drop('non-finance-domain: ' + domainHit[0]);
 
   // 3. Must look like an entry-level / analyst-type title
@@ -121,6 +159,10 @@ function evaluate(job, spec, opts = {}) {
   const ugHit = hits(degreeText, spec.exclude.undergradOnly);
   const gradHit = hits(degreeText, spec.exclude.graduateEligible);
   if (ugHit.length && !gradHit.length) return drop('undergrad-only: ' + ugHit[0]);
+  // MBA-only postings are dropped unless they also welcome master's / graduate students (anything but the bare word 'mba').
+  const mbaHit = hits(degreeText, spec.exclude.mbaOnly || []);
+  const gradBeyondMba = gradHit.filter((g) => g.toLowerCase() !== 'mba');
+  if (mbaHit.length && !gradBeyondMba.length) return drop('mba-only: ' + mbaHit[0]);
 
   // 4. Role match: strong / suggested title term, else finance context
   const ctxTerms = spec.financeContext.terms;
@@ -129,7 +171,9 @@ function evaluate(job, spec, opts = {}) {
   const hasContext = ctxInTitleDept.length > 0 || ctxInDesc.length >= spec.financeContext.descriptionHitsNeeded;
 
   const strongHit = hits(title, spec.titles.strong);
-  const suggestedHit = useSuggested ? hits(title, spec.titles.suggested) : [];
+  const suggestedAll = useSuggested ? hits(title, spec.titles.suggested) : [];
+  const needsCtx = (spec.titles.suggestedNeedsContext || []).map((t) => t.toLowerCase());
+  const suggestedHit = suggestedAll.filter((t) => !needsCtx.includes(t.toLowerCase()) || hasContext);
   const ambiguous = (spec.titles.strongNeedsContext || []).map((t) => t.toLowerCase());
   const strongOk = strongHit.filter((t) => !ambiguous.includes(t.toLowerCase()) || hasContext);
 
@@ -197,7 +241,11 @@ function evaluate(job, spec, opts = {}) {
 
   const tier = score >= sc.tiers.A ? 'A' : score >= sc.tiers.B ? 'B' : 'C';
   const variant = pickVariant(title, sectorsHit, spec);
-  return { keep: true, score, tier, roleKind, variant, flags, matched };
+  const ranked = rankVariants(title, sectorsHit, spec);
+  const variantNote = variant === 'base' ? 'no variant matches this title - research it (tailor-resume step 2)'
+    : ranked[0] && ranked[1] && ranked[0].score === ranked[1].score && ranked[0].id === variant ? 'tie with ' + ranked[1].id + ' - check the posting' : null;
+  if (variantNote) flags.push('resume variant: ' + variantNote);
+  return { keep: true, score, tier, roleKind, variant, variantRanking: ranked.slice(0, 3).map((r) => r.id + ':' + r.score), flags, matched };
 }
 
 // ---------------------------------------------------------------------------
@@ -246,7 +294,7 @@ function main() {
     const dk = [job.company, job.title, job.location].join('|').toLowerCase();
     if (seen.has(dk)) { dupes++; continue; }
     seen.add(dk);
-    kept.push({ ...job, score: r.score, tier: r.tier, roleKind: r.roleKind, resumeVariant: r.variant, flags: r.flags, matched: r.matched });
+    kept.push({ ...job, score: r.score, tier: r.tier, roleKind: r.roleKind, resumeVariant: r.variant, variantRanking: r.variantRanking, flags: r.flags, matched: r.matched });
   }
 
   kept.sort((a, b) => b.score - a.score || new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0));
@@ -278,4 +326,4 @@ function main() {
 
 if (require.main === module) main();
 
-module.exports = { evaluate, loadSpec, hits, maxYearsRequired, classYearSignal, pickVariant };
+module.exports = { evaluate, loadSpec, hits, maxYearsRequired, classYearSignal, pickVariant, rankVariants, stripProtected, normTitle };

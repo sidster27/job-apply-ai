@@ -61,3 +61,12 @@ logs/
 
 # TypeScript incremental build info
 *.tsbuildinfo
+
+# --- Finance fork: private files that must never reach the public fork ---
+data/resume-bank/
+resumes/
+Pilot_Tracker.xlsx
+Target_Company_List.xlsx
+Firm_Database_Master.csv
+config/finance-companies.json
+*.xlsx

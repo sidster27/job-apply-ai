@@ -49,6 +49,7 @@ npm test
 ## Known limits
 
 - Greenhouse boards skew toward tech companies; many asset managers and banks use Workday, iCIMS or their own sites. Use your Target Company List for those (career-page discovery; Workday support in the ATS handlers is beta).
-- `config/greenhouse-companies.json` holds 4,000+ board slugs (the original README says 929). Slugs are not finance-specific; replace with finance firms as the company list grows.
+- `config/greenhouse-companies.json` now holds ~60 finance-firm Greenhouse slugs (the upstream tech list was removed). Run `node scripts/verify-slugs.cjs --apply` on your machine to prune dead ones. Most finance firms use Workday or their own careers sites: those are in `config/careers-sources.json` and handled by `skills/apply-careers` (see `docs/job-sources.md`).
+- Six role-specific resumes map to the roles in `config/search-spec.json` -> `resumeVariants`; unfamiliar titles are researched and mapped using `skills/tailor-resume` (saved in `config/role-title-map.json`).
 - The cloud workspace used for drafting cannot reach Greenhouse / Lever APIs (proxy blocks them), so pulls run on your machine or via search / fetch.
 - Summer internships: with a May 2027 graduation, many summer-2027 programs target students who return to school. They are flagged for an eligibility check, not dropped.
