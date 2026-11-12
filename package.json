@@ -1,7 +1,7 @@
 {
   "name": "job-apply-ai",
   "version": "0.1.0",
-  "description": "AI-powered job application pipeline \u2014 search, tailor resumes, auto-fill ATS forms",
+  "description": "AI-powered job application pipeline — search, tailor resumes, auto-fill ATS forms",
   "type": "module",
   "repository": {
     "type": "git",
@@ -14,14 +14,17 @@
     "pull": "node scripts/greenhouse-pull.cjs",
     "pull:today": "node scripts/greenhouse-pull.cjs --days 1",
     "filter": "node scripts/greenhouse-filter.cjs",
-    "test": "node tests/filter.test.cjs && node tests/sources.test.cjs && node tests/resume-bank.test.cjs",
+    "test": "node tests/filter.test.cjs && node tests/sources.test.cjs && node tests/resume-bank.test.cjs && sh scripts/py.sh -m unittest discover -s tests -p \"test_*.py\"",
     "apply": "node scripts/greenhouse-apply.cjs --dry-run",
     "apply:submit": "node scripts/greenhouse-apply.cjs",
     "pipeline": "node scripts/greenhouse-pull.cjs && node scripts/greenhouse-filter.cjs && echo 'Ready to apply. Run: npm run apply'",
     "detect": "node scripts/detect-ats.cjs",
     "add-source": "node scripts/add-source.cjs",
     "bank": "node scripts/resume-bank.cjs",
-    "verify-slugs": "node scripts/verify-slugs.cjs"
+    "verify-slugs": "node scripts/verify-slugs.cjs",
+    "queue": "sh scripts/py.sh scripts/build-apply-queue.py",
+    "tracker": "sh scripts/py.sh scripts/tracker.py",
+    "writeback": "sh scripts/py.sh scripts/writeback.py"
   },
   "dependencies": {
     "better-sqlite3": "^9.4.3",
