@@ -70,3 +70,12 @@ Target_Company_List.xlsx
 Firm_Database_Master.csv
 config/finance-companies.json
 *.xlsx
+
+# --- Apply side (queue, tracker, write-back) ---
+Application_Tracker.xlsx
+data/
+drafts/
+*.csv
+.venv/
+__pycache__/
+.playwright-mcp/

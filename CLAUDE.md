@@ -8,10 +8,15 @@ This fork belongs to Siddharth Bhatia (MS Finance, graduating May 2027). Applyin
 2. **Never ask for, read or type a password.** He signs in, creates accounts (Workday needs one per tenant), enters verification codes and solves CAPTCHAs himself.
 3. **Handshake, LinkedIn, Indeed, Glassdoor, ZipRecruiter are user-driven only.** Do not crawl, search or fetch them; work on the page he has open. See `docs/job-sources.md`.
 4. **Only true facts** from `data/resume-bank/bank.json` (private) or what he states go on a resume or in an answer. Run `node scripts/resume-bank.cjs facts <file>` before using any tailored resume.
-5. **Tracking is Excel**: log every application in `Pilot_Tracker.xlsx` (not Supabase, not the SQLite tracker).
+5. **Tracking is Excel**: log every application in `Application_Tracker.xlsx` (repo root, git-ignored) with `scripts/tracker.py`, immediately after each role (not Supabase, not the SQLite tracker). The tracker is the source of truth for what he applied to. `Pilot_Tracker.xlsx` is a retired archive: do not write to it.
 6. **The fork is public. Never commit or push** resumes, `profile.json`, `data/resume-bank/`, Excel files, CSV research, keys or tokens (they are git-ignored; do not `git add -f` them). Do not push at all unless he asks.
 7. Applications only in the pilot. LinkedIn connections and cold emails come later, at low daily caps (10-15 connections, about 10 emails a day).
 8. Legal, criminal, sanctions, insider-trading, waiver or conflict-of-interest questions on a form: stop and ask him.
+9. **Show the tailored resume and get his approval before uploading it**, every time. Send him the file (and the changes/gaps from `notes.md`), wait for an explicit OK, and only then attach it to the form.
+10. **Jobs come from two pipelines, used together:** the **Main Database** of his live workbook (filled daily by his scheduled discovery task) **and** Greenhouse boards (`greenhouse-pull` + `greenhouse-filter`). A careers-page posting is applied to through whatever ATS its Apply button leads to (`detect-ats`, see `docs/job-sources.md`). Do not rebuild the discovery side.
+11. **The live workbook** is `$JOB_WORKBOOK`, default `~/Documents/Job:Internship Search/Target_Company_List.xlsx` (Finder shows "Job/Internship Search"). Use ONLY the sheets **"Target List"**, **"Careers Sources"** and **"Main Database"**; ignore "Job Database" and "Jobs". Never use a copy of the workbook inside the repo. The workbook is **read-only** for this repo (scheduled tasks edit it overnight); always read through a temp copy. The only write is `scripts/writeback.py` (Status + Date Applied of rows he applied to or skipped, matched by Dedupe Key, guarded and backed up).
+12. **Queue order is strict:** `scripts/build-apply-queue.py` orders by Date Added, newest first, ties by sheet row descending. Never reorder by fit or deadline; the "closing within 7 days" list is for his decision only.
+13. His graduation date comes from `config/profile.json` (May 2027). If it is missing or looks inconsistent with the workbook, ask him; do not assume.
 
 ## Playwright MCP Required (for applying)
 
@@ -42,6 +47,16 @@ Scripts (`scripts/greenhouse-pull.cjs`, `scripts/greenhouse-filter.cjs`, `script
 6. Use `browser_take_screenshot` before submitting — show the user
 7. Only submit after user confirms
 
+## Apply queue (`/apply-queue N`, default 10)
+Full loop and diagram: `docs/pipeline.md`. Step-by-step: `skills/apply-queue/skill.md`.
+1. `scripts/py.sh scripts/tracker.py session-start`, then `scripts/py.sh scripts/build-apply-queue.py --top N`. Show the top N in queue order.
+2. Re-open each posting (Playwright MCP): still live? eligible (May 2027 graduation, years asked, GPA)? Otherwise mark it Skipped / Blocked / Closed in the tracker with the reason.
+3. Draft the resume variant (tailor-resume) and, if useful, a cover letter, from the resume bank only; `node scripts/resume-bank.cjs facts` must pass. Tracker status Drafted. **Wait for his batch approval** (Approved), and show each resume before uploading it.
+4. Apply one role at a time. Stop for logins, CAPTCHAs, work-authorization / sponsorship questions, demographic questions and any answer not in `profile.json`. Never click the final Submit until he types "submit" for that role. Update the tracker right after each role.
+5. End of session: `scripts/py.sh scripts/writeback.py --dry-run`, then without `--dry-run`. If a guard blocks it, write nothing and tell him; the tracker alone is enough.
+
+Python scripts need openpyxl: `python3 -m venv .venv && .venv/bin/pip install -r requirements.txt` once; `scripts/py.sh` picks the interpreter.
+
 ## Key Files
 - `config/profile.json` — Applicant profile (name, email, work history, skills, etc.)
 - `config/standard-answers.json` — Common ATS question answers
@@ -52,11 +67,12 @@ Scripts (`scripts/greenhouse-pull.cjs`, `scripts/greenhouse-filter.cjs`, `script
 - `config/job-sources.json`, `config/careers-sources.json` — where postings come from and how each is applied to (`docs/job-sources.md`); `scripts/detect-ats.cjs`, `scripts/add-source.cjs`
 - `config/role-title-map.json` — job titles he has confirmed map to a resume variant (`scripts/learn-title.cjs`)
 - `data/resume-bank/bank.json` — every true resume bullet (private); `scripts/resume-bank.cjs`
-- `skills/` — Detailed skill instructions for each pipeline stage (`tailor-resume`, `impress-resume`, `apply-jobs`, `apply-careers`, `master-apply`)
+- `scripts/build-apply-queue.py`, `scripts/tracker.py`, `scripts/writeback.py` (with `scripts/apply_common.py`, `scripts/queue-bridge.cjs`) — the apply side: queue, tracker, guarded write-back
+- `skills/` — Detailed skill instructions for each pipeline stage (`apply-queue`, `tailor-resume`, `impress-resume`, `apply-jobs`, `apply-careers`, `master-apply`)
 
 ## Rules
 - Never hardcode personal information — always read from config/profile.json
 - Always take screenshots before and after submission
 - Always use Playwright MCP for form filling — never fall back to scripts
 - Default to dry-run / human review before submitting
-- Track every application in `Pilot_Tracker.xlsx` (the Excel tracker); upstream's data/applications-log.json is not used in this fork
+- Track every application in `Application_Tracker.xlsx` via `scripts/tracker.py` (the Excel tracker); upstream's data/applications-log.json is not used in this fork
