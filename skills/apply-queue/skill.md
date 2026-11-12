@@ -61,6 +61,15 @@ postings; never fetch LinkedIn, Handshake, Indeed, Glassdoor or ZipRecruiter.
 
 ## 4. Apply, one role at a time
 
+He watches the form being filled. Playwright MCP drives its own Google Chrome window (separate profile), which
+can open behind his other windows, so bring it to the front before filling each form:
+
+```
+osascript -e 'tell application "Google Chrome" to activate' \
+  -e 'tell application "Google Chrome" to repeat with w in windows' \
+  -e 'if (title of active tab of w) contains "<Company>" then set index of w to 1' -e 'end repeat'
+```
+
 Fill with Playwright MCP from `config/profile.json` and `config/standard-answers.json`. **Stop and ask** for:
 
 - logins, account creation, verification codes, CAPTCHAs (he does them; never ask for a password);
