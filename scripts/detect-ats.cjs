@@ -47,6 +47,7 @@ const RULES = [
   { id: 'successfactors', label: 'SAP SuccessFactors', test: (h) => /(^|\.)successfactors\.(com|eu)$/.test(h) || /(^|\.)sapsf\.(com|eu)$/.test(h), route: AUTO, account: true, notes: 'Account required.' },
   { id: 'talnet', label: 'Tal.net (Oleeo)', test: (h) => /(^|\.)tal\.net$/.test(h), route: AUTO, account: true, notes: 'Account required; common for banks (e.g. Jefferies).' },
   { id: 'eightfold', label: 'Eightfold', test: (h) => /(^|\.)eightfold\.ai$/.test(h), route: AUTO, account: false, notes: 'JavaScript board; may need the browser.' },
+  { id: 'jazzhr', label: 'JazzHR', test: (h) => /(^|\.)applytojob\.com$/.test(h), route: AUTO, account: false, notes: 'Standard form; may show a reCAPTCHA (user ticks it).' },
   { id: 'bamboohr', label: 'BambooHR', test: (h) => /(^|\.)bamboohr\.com$/.test(h), route: AUTO, account: false, notes: 'Standard form.' },
   { id: 'ukg', label: 'UKG / UltiPro', test: (h) => /(^|\.)ultipro\.com$/.test(h) || /(^|\.)ukg\.com$/.test(h), route: AUTO, account: true, notes: 'Account likely.' },
   { id: 'adp', label: 'ADP', test: (h) => /(^|\.)adp\.com$/.test(h), route: AUTO, account: true, notes: 'Account likely.' },

@@ -1,307 +1,207 @@
 {
   "_description": "Finance-firm Greenhouse board slugs. 'confirmed' = seen on the firm's careers page; 'unverified' = taken from the Firm Database or name-matched. Most finance firms are NOT on Greenhouse (they use Workday, Oracle or custom sites) - the careers-page scan and config/careers-sources.json are the main route. Run `node scripts/verify-slugs.cjs --apply` on your own machine (needs internet) to drop slugs that are not live boards. The 4,132 general-tech slugs from upstream were removed so a pull does not return software jobs.",
-  "_total": 60,
-  "_updated": "2026-11-11",
+  "_total": 40,
+  "_updated": "2026-11-12",
   "details": [
     {
       "slug": "aksia",
       "firm": "Aksia",
-      "status": "confirmed"
+      "status": "verified"
     },
     {
       "slug": "uvimco",
       "firm": "UVIMCO",
-      "status": "confirmed"
+      "status": "verified"
     },
     {
       "slug": "alphasense",
       "firm": "AlphaSense",
-      "status": "confirmed"
+      "status": "verified"
     },
     {
       "slug": "krollbondratingagency",
       "firm": "Kroll Bond Rating Agency",
-      "status": "confirmed"
+      "status": "verified"
     },
     {
       "slug": "pitchbookdata",
       "firm": "PitchBook",
-      "status": "confirmed"
+      "status": "verified"
     },
     {
       "slug": "pzenainvestmentmanagement",
       "firm": "Pzena Investment Management",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "baroncapital",
       "firm": "Baron Capital",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "towerresearchcapital",
       "firm": "Tower Research Capital",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "pdtpartners",
       "firm": "PDT Partners",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "picoquantitativetrading",
       "firm": "PICO Quantitative Trading",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "capstoneinvestmentadvisors",
       "firm": "Capstone Investment Advisors",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "pretiumpartnersllc",
       "firm": "Pretium Partners",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "icapitalnetwork",
       "firm": "iCapital",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "summitpartnerslp",
       "firm": "Summit Partners",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "bertramcapitalmanagement",
       "firm": "Bertram Capital",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "faralloncapitalmanagementllc",
       "firm": "Farallon Capital",
-      "status": "unverified"
-    },
-    {
-      "slug": "parallaxvolatilityadvisers",
-      "firm": "Parallax Volatility Advisers",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "a16z",
       "firm": "Andreessen Horowitz",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "bessemerventurepartners",
       "firm": "Bessemer Venture Partners",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "polychaincapital",
       "firm": "Polychain Capital",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "akunacapital",
       "firm": "Akuna Capital",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "bracebridgecapital",
       "firm": "Bracebridge Capital",
-      "status": "unverified"
-    },
-    {
-      "slug": "baincapitalventures",
-      "firm": "Bain Capital Ventures",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "artisanpartners",
       "firm": "Artisan Partners",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "sandscapitalmanagementllc",
       "firm": "Sands Capital",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "grayscaleinvestments",
       "firm": "Grayscale Investments",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "genevatrading",
       "firm": "Geneva Trading",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "gelbergroup",
       "firm": "Gelber Group",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "brileysecurities",
       "firm": "B. Riley Securities",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "gersonlehrmangroup",
       "firm": "Gerson Lehrman Group",
-      "status": "unverified"
-    },
-    {
-      "slug": "hebbia",
-      "firm": "Hebbia",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "feedzai",
       "firm": "Feedzai",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "vestwell",
       "firm": "Vestwell",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "carta",
       "firm": "Carta",
-      "status": "unverified"
-    },
-    {
-      "slug": "wellington",
-      "firm": "Wellington Management",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "point72",
       "firm": "Point72",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "janestreet",
       "firm": "Jane Street",
-      "status": "unverified"
-    },
-    {
-      "slug": "citadel",
-      "firm": "Citadel",
-      "status": "unverified"
-    },
-    {
-      "slug": "citadelsecurities",
-      "firm": "Citadel Securities",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "virtu",
       "firm": "Virtu Financial",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "drweng",
       "firm": "DRW",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "imc",
       "firm": "IMC Trading",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "optiver",
       "firm": "Optiver",
-      "status": "unverified"
-    },
-    {
-      "slug": "hudsonrivertrading",
-      "firm": "Hudson River Trading",
-      "status": "unverified"
-    },
-    {
-      "slug": "twosigma",
-      "firm": "Two Sigma",
-      "status": "unverified"
-    },
-    {
-      "slug": "balyasny",
-      "firm": "Balyasny",
-      "status": "unverified"
-    },
-    {
-      "slug": "millenniummanagement",
-      "firm": "Millennium Management",
-      "status": "unverified"
-    },
-    {
-      "slug": "blueowlcapital",
-      "firm": "Blue Owl Capital",
-      "status": "unverified"
-    },
-    {
-      "slug": "ares",
-      "firm": "Ares Management",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "apollo",
       "firm": "Apollo",
-      "status": "unverified"
-    },
-    {
-      "slug": "kkr",
-      "firm": "KKR",
-      "status": "unverified"
-    },
-    {
-      "slug": "carlyle",
-      "firm": "Carlyle",
-      "status": "unverified"
-    },
-    {
-      "slug": "tpg",
-      "firm": "TPG",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "generalatlantic",
       "firm": "General Atlantic",
-      "status": "unverified"
-    },
-    {
-      "slug": "hamiltonlane",
-      "firm": "Hamilton Lane",
-      "status": "unverified"
+      "status": "verified"
     },
     {
       "slug": "stepstone",
       "firm": "StepStone Group",
-      "status": "unverified"
-    },
-    {
-      "slug": "cambridgeassociates",
-      "firm": "Cambridge Associates",
-      "status": "unverified"
-    },
-    {
-      "slug": "morningstar",
-      "firm": "Morningstar",
-      "status": "unverified"
-    },
-    {
-      "slug": "msci",
-      "firm": "MSCI",
-      "status": "unverified"
-    },
-    {
-      "slug": "factset",
-      "firm": "FactSet",
-      "status": "unverified"
+      "status": "verified"
     }
   ],
   "companies": [
@@ -321,13 +221,11 @@
     "summitpartnerslp",
     "bertramcapitalmanagement",
     "faralloncapitalmanagementllc",
-    "parallaxvolatilityadvisers",
     "a16z",
     "bessemerventurepartners",
     "polychaincapital",
     "akunacapital",
     "bracebridgecapital",
-    "baincapitalventures",
     "artisanpartners",
     "sandscapitalmanagementllc",
     "grayscaleinvestments",
@@ -335,35 +233,17 @@
     "gelbergroup",
     "brileysecurities",
     "gersonlehrmangroup",
-    "hebbia",
     "feedzai",
     "vestwell",
     "carta",
-    "wellington",
     "point72",
     "janestreet",
-    "citadel",
-    "citadelsecurities",
     "virtu",
     "drweng",
     "imc",
     "optiver",
-    "hudsonrivertrading",
-    "twosigma",
-    "balyasny",
-    "millenniummanagement",
-    "blueowlcapital",
-    "ares",
     "apollo",
-    "kkr",
-    "carlyle",
-    "tpg",
     "generalatlantic",
-    "hamiltonlane",
-    "stepstone",
-    "cambridgeassociates",
-    "morningstar",
-    "msci",
-    "factset"
+    "stepstone"
   ]
 }

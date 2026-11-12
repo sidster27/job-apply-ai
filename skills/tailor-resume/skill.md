@@ -77,6 +77,10 @@ Tell him: variant used (and the title-research summary if it was unfamiliar), wh
 - Mention that a role was "AI-generated" or reveal tooling in the resume.
 - Overwrite originals.
 
+## Approval gate
+
+The tailored resume is **not** usable until he has seen it and said OK. After Step 6, send him the `.docx` (and the report), then wait. Only an approved resume may be uploaded to a form.
+
 ## Output
 
 `data/resumes/{company-slug}-{jobId}/Siddharth_Bhatia_Resume.docx` (edit a copy of the chosen variant `.docx` with python-docx, preserving styles) and `notes.md` containing: variant, role brief (if researched), changes, gaps, questions. Convert to PDF to check the page count; attach the PDF unless the form asks for Word.

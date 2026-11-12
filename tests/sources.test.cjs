@@ -22,6 +22,7 @@ const cases = [
   ['https://eabc.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1/job/1', 'oracle-cloud', 'auto-fill-with-approval', true],
   ['https://acme.taleo.net/careersection/2/jobdetail.ftl?job=1', 'taleo', 'auto-fill-with-approval', true],
   ['https://jobs.smartrecruiters.com/Acme/12345-analyst', 'smartrecruiters', 'auto-fill-with-approval', false],
+  ['https://acme.applytojob.com/apply/AbC123/Analyst', 'jazzhr', 'auto-fill-with-approval', false],
   ['https://app.joinhandshake.com/stu/jobs/9876543', 'handshake', 'user-driven', true],
   ['https://rochester.joinhandshake.com/jobs/123', 'handshake', 'user-driven', true],
   ['https://www.linkedin.com/jobs/view/3912345678/', 'linkedin', 'user-driven', true],

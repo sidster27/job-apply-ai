@@ -11,6 +11,15 @@ Postings reach you from several places. Each place has a **route** that says who
 | Handshake | Rochester Handshake postings | `user-driven` | You browse in your own logged-in browser. Claude only reads the page you have open, tailors the resume, and drafts answers for you to paste |
 | LinkedIn, Indeed, Glassdoor, ZipRecruiter | | `user-driven` | Same as Handshake. Their terms prohibit automated collection, so Claude never crawls, searches or fetches them |
 
+## Two pipelines, one shortlist
+
+Greenhouse is only one feed. Every batch draws on both:
+
+1. **Greenhouse boards:** `node scripts/greenhouse-pull.cjs` then `node scripts/greenhouse-filter.cjs`.
+2. **Firm careers pages:** the firms in `config/careers-sources.json`, which his scheduled careers-page scanner keeps adding to (new firms, careers URLs, open postings). Read each firm's careers page for postings that match `config/search-spec.json`, then route each one by its Apply link.
+
+Merge the two into one ranked shortlist (same tiers and resume variants), drop duplicates (the same role often appears on a firm page and its Greenhouse board), and log every role in `Pilot_Tracker.xlsx` with its Source.
+
 ## Redirects ("Apply" bounces you back to the careers site)
 
 Aggregator Apply buttons usually hand off to the employer. Never treat the aggregator as the destination:

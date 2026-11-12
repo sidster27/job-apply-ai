@@ -42,6 +42,9 @@ If `next-job.cjs` returns nothing → no jobs available, stop.
 
 ## Parallel Application Flow (10 agents)
 
+### CRITICAL: Resume approval before every upload
+Before attaching a resume to any form, send him the tailored file (`data/resumes/{company-slug}-{jobId}/Siddharth_Bhatia_Resume.docx`) plus the changes and gaps from `notes.md`, and wait for his explicit OK. Fill the other fields meanwhile if useful, but do not click Attach until he approves that resume.
+
 ### CRITICAL: Human review before every submit
 **Never click Submit without the user's explicit OK for that specific application.** For each filled form:
 1. Take a screenshot of the completed form and list any answer you were unsure about
