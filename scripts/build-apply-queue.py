@@ -4,7 +4,7 @@
   scripts/py.sh scripts/build-apply-queue.py [--top 10] [--include-low] [--workbook PATH] [--json-only]
 
 Eligible: Status New / Interested / blank; Fit High or Medium (Low with --include-low); Verification not
-closed/removed; deadline not passed; Dedupe Key not already in Application_Tracker.xlsx; route not
+closed/removed; deadline not passed; Dedupe Key not already in the workbook's Application Tracker sheet; route not
 user-driven (LinkedIn, Handshake, Indeed, Glassdoor, ZipRecruiter -> you apply yourself).
 
 ORDER (strict): Date Added newest first, ties broken by sheet row number descending. Never reordered by

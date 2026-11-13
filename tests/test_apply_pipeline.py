@@ -34,16 +34,17 @@ class Base(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         d = self.tmp.name
         self.wb = make_workbook.make(os.path.join(d, 'Target_Company_List.xlsx'))
-        self.tr = os.path.join(d, 'Application_Tracker.xlsx')
-        # keep tracker backups / session inside the temp dir
-        self._saved = (tracker.DATA_DIR, tracker.SESSION_FILE)
+        self.tr = self.wb  # the tracker is a sheet inside the same workbook
+        # keep tracker backups / session / pending queue inside the temp dir
+        self._saved = (tracker.DATA_DIR, tracker.SESSION_FILE, tracker.PENDING_FILE)
         tracker.DATA_DIR = os.path.join(d, 'data')
         tracker.SESSION_FILE = os.path.join(d, 'data', 'apply-session.json')
+        tracker.PENDING_FILE = os.path.join(d, 'data', 'tracker-pending.jsonl')
         tracker.add({'key': 'kappa|10', 'company': 'Kappa Holdings', 'title': 'Analyst', 'status': 'Applied',
                      'date_applied': '2026-11-11'}, path=self.tr)
 
     def tearDown(self):
-        tracker.DATA_DIR, tracker.SESSION_FILE = self._saved
+        tracker.DATA_DIR, tracker.SESSION_FILE, tracker.PENDING_FILE = self._saved
         self.tmp.cleanup()
 
     def queue(self, **kw):
@@ -123,7 +124,7 @@ class Tracker(Base):
         rows = {r['Dedupe Key']: r for r in tracker.list_rows(self.tr)}
         self.assertEqual(len(rows), 2)
         self.assertEqual(rows['new|1']['Status'], 'Applied')
-        self.assertEqual(rows['new|1']['Follow-up Date'].date(), dt.date(2026, 11, 18))
+        self.assertEqual(rows['new|1']['Follow-up Date'], dt.date(2026, 11, 18))
         self.assertEqual(rows['kappa|10']['Company'], 'Kappa Holdings')
 
     def test_backup_before_first_write_of_session(self):
@@ -132,6 +133,48 @@ class Tracker(Base):
         tracker.add({'key': 'b|2', 'company': 'B', 'title': 'T'}, path=self.tr)
         backups = os.listdir(os.path.join(tracker.DATA_DIR, 'backups'))
         self.assertEqual(len(backups), 1)
+
+
+class TrackerInWorkbook(Base):
+    def test_other_sheets_stay_byte_identical(self):
+        before = zipfile.ZipFile(self.wb)
+        tracker_member = writeback._sheet_member(before, 'Application Tracker')
+        keep = {n: before.read(n) for n in before.namelist() if n.startswith('xl/worksheets/') and n != tracker_member}
+        before.close()
+        tracker.add({'key': 'z|9', 'company': 'Z', 'title': 'T', 'status': 'Applied', 'date_applied': '2026-11-11'}, path=self.tr)
+        after = zipfile.ZipFile(self.wb)
+        for n, data in keep.items():
+            self.assertEqual(after.read(n), data, n)           # no existing sheet was touched
+        wb_xml = after.read('xl/workbook.xml').decode()
+        after.close()
+        self.assertIn('name="Application Tracker"', wb_xml)
+        import openpyxl
+        wb = openpyxl.load_workbook(self.wb)
+        self.assertEqual(wb.sheetnames[:3], ['Target List', 'Main Database', 'Application Tracker'])
+        ws = wb['Application Tracker']
+        self.assertEqual([c.value for c in ws[1]][:3], ['Dedupe Key', 'Company', 'Job Title'])
+        self.assertEqual(len(wb['Main Database'].data_validations.dataValidation), 1)
+
+    def test_locked_workbook_queues_then_flush_applies(self):
+        open(apply_common.lock_path(self.wb), 'w').close()
+        self.assertEqual(tracker.add({'key': 'q|1', 'company': 'Q', 'title': 'T'}, path=self.tr), 'queued')
+        self.assertNotIn('q|1', tracker.keys(self.tr))
+        os.remove(apply_common.lock_path(self.wb))
+        self.assertEqual(tracker.flush(self.tr), 1)
+        self.assertIn('q|1', tracker.keys(self.tr))
+
+    def test_add_many_one_backup_and_dedupe(self):
+        tracker.session_start(path=self.tr, workbook=self.wb)
+        rows = [{'Dedupe Key': f'm|{i}', 'Company': 'M', 'Job Title': 'T'} for i in range(3)] + [{'Dedupe Key': 'kappa|10', 'Company': 'dup'}]
+        res = tracker.add_many(rows, path=self.tr)
+        self.assertEqual(res, {'added': 3, 'exists': 1})
+        self.assertEqual(len(os.listdir(os.path.join(tracker.DATA_DIR, 'backups'))), 1)
+
+    def test_tracker_write_does_not_trip_writeback_guard(self):
+        tracker.session_start(path=self.tr, workbook=self.wb)
+        tracker.add({'key': 'w|1', 'company': 'W', 'title': 'T'}, path=self.tr)      # changes the workbook mtime
+        changes, _ = writeback.writeback(self.wb, self.tr, dry_run=True, today=TODAY)  # still allowed: mtime re-recorded
+        self.assertEqual([c['key'] for c in changes], ['kappa|10'])   # Applied in the tracker, still New in Main Database
 
 
 class WriteBack(Base):

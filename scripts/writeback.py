@@ -30,6 +30,7 @@ import zipfile
 from xml.sax.saxutils import escape
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import xlsx_edit as X  # noqa: E402
 from apply_common import MAIN_DB, TRACKER_PATH, lock_path, parse_date, workbook_path  # noqa: E402
 import tracker  # noqa: E402
 
@@ -38,100 +39,21 @@ OVERWRITABLE = {'', 'new', 'interested'}
 NS_REL = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'
 
 
-class Blocked(Exception):
-    pass
-
-
-def col_letter(n):
-    s = ''
-    while n:
-        n, r = divmod(n - 1, 26)
-        s = chr(65 + r) + s
-    return s
-
-
-def col_number(letters):
-    n = 0
-    for ch in letters:
-        n = n * 26 + ord(ch) - 64
-    return n
-
-
-def excel_serial(d):
-    return (d - dt.date(1899, 12, 30)).days
+Blocked = X.Blocked
+col_letter, col_number, excel_serial = X.col_letter, X.col_number, X.excel_serial
+_row_cells, _set_cell, _style = X.row_cells, X.set_cell, X.style_attr
+_cell_value = X.cell_value
 
 
 def _sheet_member(z, name):
-    wb = z.read('xl/workbook.xml').decode('utf8')
-    m = re.search(r'<sheet\b[^>]*\bname="%s"[^>]*/>' % re.escape(escape(name, {'"': '&quot;'})), wb)
-    if not m:
+    m = X.sheet_member(z, name)
+    if m is None:
         raise SystemExit(f'Sheet "{name}" not found in the workbook.')
-    rid = re.search(r'r:id="([^"]+)"', m.group(0)).group(1)
-    rels = z.read('xl/_rels/workbook.xml.rels').decode('utf8')
-    target = re.search(r'<Relationship\b[^>]*Id="%s"[^>]*Target="([^"]+)"' % re.escape(rid), rels) or \
-        re.search(r'<Relationship\b[^>]*Target="([^"]+)"[^>]*Id="%s"' % re.escape(rid), rels)
-    t = target.group(1).lstrip('/')
-    return t if t.startswith('xl/') else 'xl/' + t
+    return m
 
 
 def _shared_strings(z):
-    try:
-        x = z.read('xl/sharedStrings.xml').decode('utf8')
-    except KeyError:
-        return []
-    out = []
-    for si in re.findall(r'<si>(.*?)</si>', x, re.S):
-        out.append(_unxml(''.join(re.findall(r'<t[^>]*>(.*?)</t>', si, re.S))))
-    return out
-
-
-def _unxml(s):
-    return s.replace('&lt;', '<').replace('&gt;', '>').replace('&quot;', '"').replace('&apos;', "'").replace('&amp;', '&')
-
-
-CELL_RE = re.compile(r'<c\b([^>]*?)(?:/>|>(.*?)</c>)', re.S)
-
-
-def _cell_value(attrs, inner, sst):
-    t = re.search(r'\bt="([^"]+)"', attrs)
-    t = t.group(1) if t else None
-    if inner is None:
-        return None
-    if t == 'inlineStr':
-        return _unxml(''.join(re.findall(r'<t[^>]*>(.*?)</t>', inner, re.S)))
-    v = re.search(r'<v>(.*?)</v>', inner, re.S)
-    if not v:
-        return None
-    if t == 's':
-        return sst[int(v.group(1))]
-    return _unxml(v.group(1))
-
-
-def _row_cells(row_xml):
-    """{column_letter: (full_match, attrs, inner)} for one <row>."""
-    out = {}
-    for m in CELL_RE.finditer(row_xml):
-        ref = re.search(r'\br="([A-Z]+)\d+"', m.group(1)).group(1)
-        out[ref] = (m.group(0), m.group(1), m.group(2))
-    return out
-
-
-def _style(attrs):
-    s = re.search(r'\bs="(\d+)"', attrs or '')
-    return f' s="{s.group(1)}"' if s else ''
-
-
-def _set_cell(row_xml, row_num, col, new_cell_body, cells):
-    """Replace (or insert, in column order) the cell `col` in this row."""
-    ref = f'{col}{row_num}'
-    if col in cells:
-        full, attrs, _ = cells[col]
-        return row_xml.replace(full, new_cell_body(_style(attrs), ref), 1)
-    new = new_cell_body('', ref)
-    for other in sorted(cells, key=col_number):
-        if col_number(other) > col_number(col):
-            return row_xml.replace(cells[other][0], new + cells[other][0], 1)
-    return re.sub(r'</row>$', new + '</row>', row_xml)
+    return X.shared_strings(z)
 
 
 def plan_changes(workbook, tracker_path=TRACKER_PATH):
@@ -249,7 +171,7 @@ def main(argv=None):
         changes, msg = writeback(a.workbook, a.tracker, dry_run=a.dry_run)
     except Blocked as e:
         print('Write-back skipped:', e)
-        print('Nothing was written. The tracker (Application_Tracker.xlsx) remains the record.')
+        print('Nothing was written. The Application Tracker sheet remains the record.')
         return 2
     for c in changes:
         print(f'  row {c["row"]}: {c["key"]}  Status {c["from"] or "(blank)"} -> {c["status"]}'

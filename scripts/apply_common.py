@@ -10,8 +10,9 @@ import shutil
 import tempfile
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-DEFAULT_WORKBOOK = os.path.join(os.path.expanduser('~'), 'Documents', 'Job:Internship Search', 'Target_Company_List.xlsx')
-TRACKER_PATH = os.environ.get('APPLY_TRACKER', os.path.join(ROOT, 'Application_Tracker.xlsx'))
+# The one workbook: Target_Company_List.xlsx in the repo root (git-ignored). Its sheets "Target List", "Careers Sources",
+# "Main Database" feed the queue; the "Application Tracker" sheet is where applications are logged.
+DEFAULT_WORKBOOK = os.path.join(ROOT, 'Target_Company_List.xlsx')
 DATA_DIR = os.path.join(ROOT, 'data')
 
 MAIN_DB = 'Main Database'
@@ -27,19 +28,10 @@ def workbook_path():
     return os.environ.get('JOB_WORKBOOK', DEFAULT_WORKBOOK)
 
 
-def lock_path(path):
-    d, b = os.path.split(path)
-    return os.path.join(d, '~$' + b)
+TRACKER_PATH = workbook_path()  # the tracker lives inside the same workbook
 
 
-def temp_copy(path):
-    """Copy the workbook to a temp file so an open or locked original never breaks a read."""
-    if not os.path.exists(path):
-        raise SystemExit(f'Workbook not found: {path}\nSet JOB_WORKBOOK to its location.')
-    fd, tmp = tempfile.mkstemp(suffix='.xlsx', prefix='apply-read-')
-    os.close(fd)
-    shutil.copyfile(path, tmp)
-    return tmp
+from xlsx_edit import lock_path, temp_copy  # noqa: E402,F401  (shared with tracker.py / writeback.py)
 
 
 def find_header(ws, required=REQUIRED_HEADERS, max_scan=15):
