@@ -6,7 +6,7 @@ description: Apply to the next N roles from the live workbook's Main Database, i
 # Apply queue
 
 Discovery is not this skill's job: a scheduled task fills the workbook's **Main Database** daily. This skill
-turns that list into submitted applications and keeps `Application_Tracker.xlsx` current. Read
+turns that list into submitted applications and keeps the workbook's Application Tracker sheet current. Read
 `CLAUDE.md` (fork rules 1-13) first; `docs/pipeline.md` shows the whole loop.
 
 ## 0. Start the session
@@ -18,8 +18,9 @@ scripts/py.sh scripts/build-apply-queue.py --top N        # N from "/apply-queue
 
 - `session-start` records the workbook's mtime (the write-back guard) and lets the tracker back itself up
   once before its first write.
-- The queue reads the live workbook (`$JOB_WORKBOOK`) through a temp copy. Never open the workbook in the
-  repo; never edit it here.
+- The queue reads `Target_Company_List.xlsx` (repo root, `$JOB_WORKBOOK`) through a temp copy; the tracker sheet and
+  write-back are the only things that edit it, and only through the scripts (never re-save it with openpyxl).
+  If Excel has it open, tracker changes queue up: tell him to close it, then `tracker.py flush`.
 - If `config/profile.json` has no graduation date, the script stops: ask him.
 
 ## 1. Show the queue as built

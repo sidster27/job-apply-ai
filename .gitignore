@@ -79,3 +79,4 @@ drafts/
 .venv/
 __pycache__/
 .playwright-mcp/
+handoff.md
